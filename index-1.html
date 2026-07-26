@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Dost ❤️</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap'); body{font-family:Inter}</style>
+</head>
+<body style="background:#0B0E16" class="flex justify-center">
+<div class="w-full max-w-[420px] min-h-screen bg-[#0B0E16] relative pb-[80px]">
+
+<!-- Header -->
+<div class="flex justify-between items-center p-4 sticky top-0 z-10 bg-[#0B0E16]/95 backdrop-blur border-b border-white/5">
+<div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white font-black">❤</div><div class="text-white font-black text-[20px] tracking-tight">Dost <span class="text-[#FF2E63]">❤️</span></div></div>
+<div id="userCount" class="bg-white/10 px-3 py-1 rounded-full text-[11px] text-white/80">Loading...</div>
+</div>
+
+<!-- Phone identify banner (needed so VIP status can be tied to a real person, not just a browser) -->
+<div id="idBanner" class="m-3 p-3 bg-white/5 border border-white/10 rounded-xl text-center hidden">
+<div class="text-white/80 text-[12px] mb-2">Apna phone number daalo taaki VIP status save ho sake</div>
+<div class="flex gap-2">
+<input id="phoneInput" type="tel" placeholder="10-digit mobile" maxlength="10" class="flex-1 bg-white/10 text-white text-[13px] rounded-lg px-3 py-2 outline-none"/>
+<button onclick="saveIdentity()" class="bg-[#FF2E63] text-white text-[12px] font-bold px-4 rounded-lg">Save</button>
+</div>
+</div>
+
+<div id="grid" class="grid grid-cols-2 gap-2.5 p-2.5"></div>
+<div id="emptyState" class="hidden text-center text-white/40 text-[13px] p-8">Abhi koi profile available nahi hai.</div>
+
+<!-- Profile / Signup screen -->
+<div id="meScreen" class="hidden p-4">
+<div class="text-white font-black text-[18px] mb-4">Apna Profile</div>
+
+<div class="flex flex-col items-center mb-5">
+<label for="photoInput" class="w-28 h-28 rounded-full bg-white/5 border-2 border-dashed border-white/20 flex items-center justify-center overflow-hidden cursor-pointer">
+<img id="photoPreview" class="w-full h-full object-cover hidden">
+<span id="photoPlaceholder" class="text-white/40 text-[11px] text-center px-2">Photo<br>Chuno</span>
+</label>
+<input type="file" id="photoInput" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto(event)">
+</div>
+
+<div class="flex flex-col gap-3">
+<div>
+<label class="text-white/60 text-[11px]">Naam</label>
+<input id="meName" type="text" placeholder="Apna naam" class="w-full bg-white/10 text-white text-[14px] rounded-lg px-3 py-2.5 mt-1 outline-none"/>
+</div>
+<div>
+<label class="text-white/60 text-[11px]">Age</label>
+<input id="meAge" type="number" min="18" max="99" placeholder="Age (18+)" class="w-full bg-white/10 text-white text-[14px] rounded-lg px-3 py-2.5 mt-1 outline-none"/>
+</div>
+<div>
+<label class="text-white/60 text-[11px]">City</label>
+<input id="meCity" type="text" placeholder="Apna city" class="w-full bg-white/10 text-white text-[14px] rounded-lg px-3 py-2.5 mt-1 outline-none"/>
+</div>
+</div>
+
+<button onclick="saveProfile()" class="w-full mt-5 bg-[#FF2E63] text-white py-3.5 rounded-full font-black text-[15px]">Profile Save Karo</button>
+<div id="meStatus" class="text-[11px] text-center mt-3"></div>
+</div>
+
+<!-- Pay Modal -->
+<div id="payModal" class="fixed inset-0 z-[99] hidden">
+<div class="absolute inset-0 bg-black/85 backdrop-blur-sm" onclick="closePay()"></div>
+<div class="absolute bottom-0 w-full max-w-[420px] bg-[#FFF0F5] rounded-t-[32px] overflow-hidden">
+<div class="bg-gradient-to-r from-[#FF2E63] to-[#E91E63] p-5 text-center text-white"><div class="text-[24px] font-black">❤️ Dost VIP</div><div class="text-white/90 text-[13px] mt-1">₹49 mein sabhi profiles unlock karo</div></div>
+<div class="p-6 flex flex-col items-center">
+<div class="text-[32px] font-black text-[#FF2E63]">₹49</div>
+<div class="text-[11px] text-green-600 font-bold mt-1">✓ Lifetime VIP</div>
+<button onclick="startPayment()" id="payBtn" class="w-full mt-5 bg-[#FF2E63] text-white py-4 rounded-full font-black text-[16px] shadow-lg shadow-pink-500/30">Pay ₹49 se Unlock karo</button>
+<div id="payStatus" class="text-[11px] text-gray-500 mt-3 text-center"></div>
+<div class="text-[10px] text-gray-400 mt-2 text-center">Payment Razorpay se verify hoti hai. Fake unlock possible nahi hai.</div>
+</div>
+</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="fixed bottom-0 w-full max-w-[420px] bg-[#141722] border-t border-white/5 flex justify-around py-3">
+<div id="navNearby" onclick="showTab('nearby')" class="text-center text-[#FF2E63] cursor-pointer"><div class="text-[20px]">⌂</div><div class="text-[10px] font-bold">Nearby</div></div>
+<div id="navChat" class="opacity-30 text-center text-white"><div class="text-[20px]">💬</div><div class="text-[10px]">Chat</div></div>
+<div id="navMe" onclick="showTab('me')" class="opacity-30 text-center text-white cursor-pointer"><div class="text-[20px]">👤</div><div class="text-[10px]">Me</div></div>
+</div>
+</div>
+
+<script>
+// ====== CONFIG ======
+const FIREBASE_DB = 'https://dil-se-dil-tak-b451d-default-rtdb.firebaseio.com';
+const BACKEND_BASE = 'https://YOUR-CLOUD-FUNCTIONS-URL'; // <-- replace after deploying functions/index.js
+const FREE_PROFILE_COUNT = 6; // how many real profiles are visible without VIP
+
+let realUsers = [];
+let myPhone = localStorage.getItem('dost_phone') || '';
+let isVip = false;
+
+async function fetchUsers(){
+  try{
+    let r = await fetch(FIREBASE_DB + '/users.json?ts=' + Date.now());
+    let d = await r.json();
+    realUsers = d ? Object.values(d).filter(u => (u.age || 0) >= 18 && u.photoUrl && u.name) : [];
+  }catch(e){ realUsers = []; }
+  document.getElementById('userCount').textContent = realUsers.length + ' profiles';
+  render();
+}
+
+async function checkVipStatus(){
+  if(!myPhone) return;
+  try{
+    let r = await fetch(FIREBASE_DB + '/vipUsers/' + myPhone + '.json');
+    let d = await r.json();
+    isVip = d === true;
+  }catch(e){ isVip = false; }
+}
+
+function saveIdentity(){
+  let v = document.getElementById('phoneInput').value.trim();
+  if(!/^\d{10}$/.test(v)){ alert('Sahi 10-digit number daalo'); return; }
+  myPhone = v;
+  localStorage.setItem('dost_phone', v);
+  document.getElementById('idBanner').classList.add('hidden');
+  checkVipStatus().then(render);
+}
+
+function render(){
+  let grid = document.getElementById('grid');
+  if(realUsers.length === 0){
+    grid.innerHTML = '';
+    document.getElementById('emptyState').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('emptyState').classList.add('hidden');
+
+  let html = '';
+  realUsers.forEach((u, i) => {
+    let locked = !isVip && i >= FREE_PROFILE_COUNT;
+    let blur = locked ? ' blur-[14px] scale-110' : '';
+    let lockOverlay = locked ? `<div class="absolute inset-0 flex items-center justify-center"><div class="bg-black/75 backdrop-blur-md px-4 py-2 rounded-full text-[11px] font-black text-white border border-white/20">🔒 VIP - ₹49</div></div>` : '';
+    html += `<div onclick="${locked ? 'openPay()' : ''}" class="relative rounded-[18px] overflow-hidden h-[210px] bg-[#1A1D29] border border-white/5 ${locked ? 'cursor-pointer' : ''}">
+      <img src="${u.photoUrl}" class="w-full h-full object-cover${blur}">
+      ${lockOverlay}
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent pointer-events-none"></div>
+      <div class="absolute bottom-2.5 left-2.5 right-2.5">
+        <div class="text-white font-black text-[13px]">${locked ? '???' : (u.name + ' ' + u.age)}</div>
+        <div class="text-[#6CFF8F] text-[10px] font-bold mt-0.5">● ${locked ? 'Unlock to see' : (u.city || '')}</div>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+
+function openPay(){
+  if(!myPhone){ document.getElementById('idBanner').classList.remove('hidden'); return; }
+  document.getElementById('payModal').classList.remove('hidden');
+}
+function closePay(){ document.getElementById('payModal').classList.add('hidden'); }
+
+async function startPayment(){
+  if(!myPhone){ alert('Pehle phone number save karo'); return; }
+  let statusEl = document.getElementById('payStatus');
+  statusEl.textContent = 'Order banaya ja raha hai...';
+  try{
+    // 1. Ask OUR backend to create a Razorpay order (never create orders from client with a secret key)
+    let orderRes = await fetch(BACKEND_BASE + '/createOrder', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ phone: myPhone, amount: 4900 }) // amount in paise
+    });
+    let order = await orderRes.json();
+
+    let options = {
+      key: order.razorpayKeyId, // public key id, safe to expose
+      amount: order.amount,
+      currency: 'INR',
+      name: 'Dost VIP',
+      order_id: order.id,
+      handler: async function(response){
+        statusEl.textContent = 'Verify ho raha hai...';
+        // 2. Send payment response to OUR backend for signature verification
+        let verifyRes = await fetch(BACKEND_BASE + '/verifyPayment', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            phone: myPhone,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          })
+        });
+        let verifyData = await verifyRes.json();
+        if(verifyData.verified){
+          isVip = true;
+          statusEl.textContent = '✅ VIP Unlocked!';
+          closePay();
+          render();
+        } else {
+          statusEl.textContent = '❌ Verification fail hui. Support se contact karo.';
+        }
+      },
+      prefill: { contact: myPhone },
+      theme: { color: '#FF2E63' }
+    };
+    let rzp = new Razorpay(options);
+    rzp.open();
+    statusEl.textContent = '';
+  }catch(e){
+    statusEl.textContent = 'Kuch galat hua, dobara try karo.';
+  }
+}
+
+let selectedPhotoBase64 = '';
+
+function showTab(tab){
+  document.getElementById('grid').classList.toggle('hidden', tab !== 'nearby');
+  document.getElementById('meScreen').classList.toggle('hidden', tab !== 'me');
+  document.getElementById('navNearby').className = tab === 'nearby' ? 'text-center text-[#FF2E63] cursor-pointer' : 'opacity-30 text-center text-white cursor-pointer';
+  document.getElementById('navMe').className = tab === 'me' ? 'text-center text-[#FF2E63] cursor-pointer' : 'opacity-30 text-center text-white cursor-pointer';
+  if(tab === 'nearby') render();
+  if(tab === 'me' && !myPhone) document.getElementById('idBanner').classList.remove('hidden');
+}
+
+function handlePhoto(e){
+  let file = e.target.files[0];
+  if(!file) return;
+  let reader = new FileReader();
+  reader.onload = function(ev){
+    let img = new Image();
+    img.onload = function(){
+      // Compress to keep the Realtime Database entry small
+      let canvas = document.createElement('canvas');
+      let maxSize = 400;
+      let scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      selectedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('photoPreview').src = selectedPhotoBase64;
+      document.getElementById('photoPreview').classList.remove('hidden');
+      document.getElementById('photoPlaceholder').classList.add('hidden');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveProfile(){
+  let statusEl = document.getElementById('meStatus');
+  if(!myPhone){ document.getElementById('idBanner').classList.remove('hidden'); return; }
+  let name = document.getElementById('meName').value.trim();
+  let age = parseInt(document.getElementById('meAge').value);
+  let city = document.getElementById('meCity').value.trim();
+
+  if(!name || !age || !city || !selectedPhotoBase64){
+    statusEl.textContent = '❌ Sab fields aur photo zaroori hai';
+    statusEl.className = 'text-[11px] text-center mt-3 text-red-400';
+    return;
+  }
+  if(age < 18){
+    statusEl.textContent = '❌ 18 se kam age allowed nahi hai';
+    statusEl.className = 'text-[11px] text-center mt-3 text-red-400';
+    return;
+  }
+
+  statusEl.textContent = 'Save ho raha hai...';
+  try{
+    let res = await fetch(FIREBASE_DB + '/users/' + myPhone + '.json', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, age, city, photoUrl: selectedPhotoBase64 })
+    });
+    if(res.ok){
+      statusEl.textContent = '✅ Profile save ho gaya!';
+      statusEl.className = 'text-[11px] text-center mt-3 text-green-400';
+      fetchUsers();
+    } else {
+      statusEl.textContent = '❌ Kuch galat hua, dobara try karo';
+      statusEl.className = 'text-[11px] text-center mt-3 text-red-400';
+    }
+  }catch(e){
+    statusEl.textContent = '❌ Network error';
+    statusEl.className = 'text-[11px] text-center mt-3 text-red-400';
+  }
+}
+
+(async function init(){
+  if(!myPhone){ document.getElementById('idBanner').classList.remove('hidden'); }
+  await fetchUsers();
+  await checkVipStatus();
+  render();
+  setInterval(fetchUsers, 15000);
+})();
+</script>
+</body></html>
