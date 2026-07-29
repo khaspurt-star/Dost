@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head><!-- PLAYABLE_TOUCH_PATCH_V1 --><script>
 (function() {
   if (window.__playableTouchPatchInstalled) return;
@@ -20,337 +20,301 @@
   };
 })();
 </script><script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Dost - Real Call</title>
-<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui}
-body{background:#050a14;color:#fff;min-height:100vh;overflow-x:hidden}
-.hidden{display:none!important}
-#loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#0a0e1a}
-.card{background:#151a2c;border:1px solid #2a3147;border-radius:24px;padding:28px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.logo{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#ff2d75,#ff6b9d);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px}
-.sub{color:#8a91a8;font-size:13px;margin:8px 0 20px;line-height:1.4}
-.label{font-size:11px;color:#8a91a8;margin-bottom:6px;display:block;letter-spacing:.8px}
-.input-wrap{display:flex;gap:8px;align-items:center;background:#0f1423;border:1px solid #2a3147;border-radius:14px;padding:12px 14px}
-.input-wrap:focus-within{border-color:#ff2d75}
-.input-wrap input{background:transparent;border:0;outline:0;color:#fff;font-size:16px;width:100%}
-.prefix{color:#8a91a8;font-weight:600}
-.btn{width:100%;background:linear-gradient(135deg,#ff2d75,#ff3b6a);border:0;color:#fff;padding:14px;border-radius:14px;font-weight:700;font-size:15px;margin-top:14px;cursor:pointer}
-.otp-box{display:none;margin-top:18px}.otp-box.show{display:block}
-.otp-display{background:#0f1423;border:1px dashed #ff2d75;border-radius:12px;padding:12px;text-align:center;margin:12px 0}
-.otp-display span{font-size:28px;letter-spacing:8px;font-weight:900;color:#00ff88}
-.otp-inputs{display:flex;gap:8px;justify-content:center;margin:16px 0}
-.otp-inputs input{width:48px;height:52px;background:#0f1423;border:1px solid #2a3147;border-radius:12px;text-align:center;color:#fff;font-size:20px;font-weight:700;outline:0}
-#mainApp{background:#070b18;min-height:100vh;padding-bottom:80px}
-.topbar{height:56px;background:#0f1423;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #1c2338;position:sticky;top:0;z-index:10}
-.online-badge{background:#1a233f;border:1px solid #2a3a5c;padding:6px 12px;border-radius:20px;font-size:12px;color:#8a91a8;display:flex;gap:6px;align-items:center}
-.online-dot{width:8px;height:8px;background:#00d084;border-radius:50%;box-shadow:0 0 8px #00d084}
-.peer-badge{border:1px solid #ff2d75;color:#ff8ab5;font-size:9px;padding:5px 8px;border-radius:20px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tab-content{padding:14px}
-.profile-wrap{padding:26px 20px 10px;text-align:center}
-.avatar{width:132px;height:132px;margin:0 auto;border-radius:50%;padding:4px;background:linear-gradient(135deg,#ff2d75,#8a2df5);position:relative}
-.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #070b18}
-.online-green{position:absolute;right:8px;top:8px;width:14px;height:14px;background:#00d084;border:2px solid #070b18;border-radius:50%}
-.cam{position:absolute;right:-4px;bottom:6px;width:36px;height:36px;background:#1a233f;border:2px solid #ff2d75;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.gallery-btn{margin:18px auto 0;background:#1a1f32;border:1px solid #3a2a4a;border-radius:24px;padding:10px 18px;font-size:13px;color:#e2b5ff;display:inline-flex;gap:8px;align-items:center;cursor:pointer}
-.name{font-size:26px;font-weight:800;margin-top:18px}
-.meta{color:#8a91a8;font-size:13px;margin-top:4px}
-.call-card{background:#111729;border:1px solid #1c2338;border-radius:20px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.call-left{display:flex;gap:12px;align-items:center}
-.icon-box{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.voice .icon-box{background:#0f2a1e}.video .icon-box{background:#2a1525}
-.call-title{font-size:14px;font-weight:600;display:flex;gap:6px;align-items:center}
-.call-title .on{background:#0f2a1e;color:#00d084;border:1px solid #1a4a2e;font-size:10px;padding:2px 8px;border-radius:10px}
-.call-desc{font-size:11px;color:#5a627c;margin-top:2px}
-.toggle{width:56px;height:32px;background:#00d084;border-radius:20px;position:relative;cursor:pointer;transition:.2s}
-.toggle .knob{width:24px;height:24px;background:#fff;border-radius:50%;position:absolute;right:4px;top:4px;transition:.2s}
-.toggle.off{background:#2a3147}.toggle.off .knob{left:4px;right:auto}
-.user-row{background:#111729;border:1px solid #1c2338;border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.user-info{display:flex;gap:10px;align-items:center}
-.uavatar{width:44px;height:44px;border-radius:50%;object-fit:cover}
-.call-btns{display:flex;gap:8px}
-.cbtn{width:36px;height:36px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
-.cbtn.voice{background:#0f2a1e}.cbtn.video{background:#2a1525}
-.dial-card{background:#111729;border:1px solid #2a3147;border-radius:20px;padding:16px;margin-bottom:16px}
-.dial-input{width:100%;background:#0f1423;border:1px solid #2a3147;border-radius:12px;padding:12px;color:#fff;font-size:16px;outline:0;margin:10px 0}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#0a0f1e;border-top:1px solid #1c2338;display:flex;justify-content:space-around;padding:8px 0 12px;z-index:30}
-.bitem{flex:1;text-align:center;color:#5a627c;font-size:11px;display:flex;flex-direction:column;gap:4px;align-items:center;cursor:pointer}
-.bitem.active{color:#4a8cff}
-.bicon{font-size:20px}
-/* CALL OVERLAY */
-#callOverlay{position:fixed;inset:0;background:#000;z-index:100;display:none;flex-direction:column}
-#callOverlay.show{display:flex}
-#remoteVideo{width:100%;height:100%;object-fit:cover;background:#070b18}
-#localVideo{position:absolute;right:14px;top:70px;width:110px;height:150px;border-radius:16px;border:2px solid #ff2d75;object-fit:cover;background:#111;z-index:2}
-.call-controls{position:absolute;bottom:30px;left:0;right:0;display:flex;justify-content:center;gap:18px;z-index:3}
-.ctrl{width:56px;height:56px;border-radius:50%;border:0;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.ctrl.end{background:#ff2d55;color:#fff}
-.ctrl.mute{background:#2a3147;color:#fff}
-.call-status{position:absolute;top:20px;left:0;right:0;text-align:center;z-index:3}
-.incoming{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:101;display:none;align-items:center;justify-content:center;padding:20px}
-.incoming.show{display:flex}
-.inc-card{background:#151a2c;border:1px solid #2a3147;border-radius:24px;padding:28px;width:100%;max-width:340px;text-align:center}
+*{margin:0;padding:0;box-sizing:border-box;font-family: -apple-system, BlinkMacSystemFont, sans-serif;}
+body{background:#0f172a;color:#fff;min-height:100vh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0f172a;border-bottom:1px solid #1e293b;position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#ec4899,#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800}
+.online-badge{background:#1e293b;border:1px solid #334155;padding:4px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;background:#22c55e;border-radius:50%;box-shadow:0 0 6px #22c55e}
+.id-badge{border:1px solid #ec4899;color:#ec4899;padding:4px 10px;border-radius:20px;font-size:11px}
+.page{padding:16px;padding-bottom:90px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:16px;margin-bottom:16px}
+.avatar-wrap{position:relative;width:140px;height:140px;margin:20px auto}
+.avatar{width:140px;height:140px;border-radius:50%;border:4px solid transparent;background:linear-gradient(#1e293b,#1e293b) padding-box, linear-gradient(135deg,#ec4899,#8b5cf6) border-box;object-fit:cover}
+.cam-btn{position:absolute;bottom:4px;right:4px;width:36px;height:36px;background:#1e293b;border:2px solid #ec4899;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.input{width:100%;background:#0f172a;border:1px solid #334155;border-radius:14px;padding:14px;color:#fff;outline:none;margin:8px 0;font-size:15px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-pink{background:linear-gradient(135deg,#ec4899,#8b5cf6);color:#fff}
+.btn-green{background:#0f3d2e;color:#86efac;border:1px solid #14532d}
+.row{display:flex;gap:12px}
+.toggle{width:56px;height:32px;background:#334155;border-radius:20px;position:relative;cursor:pointer;transition:.3s}
+.toggle.on{background:#22c55e}
+.toggle div{width:26px;height:26px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.3s}
+.toggle.on div{left:27px}
+.call-overlay{position:fixed;inset:0;background:#000;z-index:100;display:none;flex-direction:column}
+.call-overlay.active{display:flex}
+.video-big{flex:1;background:#111;position:relative;overflow:hidden}
+.video-big video{width:100%;height:100%;object-fit:cover}
+.video-small{position:absolute;top:80px;right:16px;width:120px;height:160px;border:2px solid #ec4899;border-radius:16px;overflow:hidden;background:#222}
+.video-small video{width:100%;height:100%;object-fit:cover}
+.call-controls{padding:20px;display:flex;justify-content:center;gap:20px;background:linear-gradient(transparent,#0009)}
+.ctrl{width:56px;height:56px;border-radius:50%;border:none;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ctrl.mic{background:#1e293b;color:#fff}
+.ctrl.end{background:#ec4899;color:#fff;width:64px;height:64px;font-size:28px}
+.ctrl.cam{background:#1e293b;color:#fff}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0f172a;border-top:1px solid #1e293b;display:flex;justify-content:space-around;padding:10px 0}
+.nav-item{display:flex;flex-direction:column;align-items:center;font-size:11px;color:#64748b;cursor:pointer;gap:4px}
+.nav-item.active{color:#38bdf8}
+.badge-demo{font-size:10px;color:#22c55e;margin-top:4px}
+.note{border:1px dashed #ec4899;background:#ec48991a;padding:12px;border-radius:12px;font-size:13px;margin-top:12px;color:#f9a8d4}
 </style>
 </head>
 <body>
-<div id="loginPage">
-<div class="card">
-<div class="logo"><div class="logo-icon">D</div><div><div style="font-weight:800">Dost</div><div style="font-size:11px;color:#8a91a8">Real Call • Secure</div></div></div>
-<div class="sub">Login karne ke liye mobile number daalo, 4 digit ka code ayega jaise <b>3553, 6776</b></div>
-<div id="step1">
-<span class="label">MOBILE NUMBER</span><div class="input-wrap"><span class="prefix">+91</span><input id="mobile" type="tel" maxlength="10" placeholder="98xxxxxxxx"></div>
-<button class="btn" id="sendBtn" onclick="sendOTP()">📲 Code Bhejo</button>
-</div>
-<div class="otp-box" id="step2">
-<div class="otp-display"><div style="font-size:11px;color:#8a91a8;margin-bottom:4px">Tera OTP Code (Demo)</div><span id="generatedCode">----</span></div>
-<span class="label">4 DIGIT CODE</span>
-<div class="otp-inputs">
-<input id="o1" maxlength="1" oninput="moveNext(this,'o2')" onkeydown="back(event,this)">
-<input id="o2" maxlength="1" oninput="moveNext(this,'o3')" onkeydown="back(event,this,'o1')">
-<input id="o3" maxlength="1" oninput="moveNext(this,'o4')" onkeydown="back(event,this,'o2')">
-<input id="o4" maxlength="1" oninput="doVerify()" onkeydown="back(event,this,'o3')">
-</div>
-<button class="btn" onclick="verifyOTP()">✓ Verify & Login</button>
-</div>
-</div>
-</div>
 
-<div id="mainApp" class="hidden">
 <div class="topbar">
-<div style="display:flex;gap:10px;align-items:center"><div class="logo-icon" style="width:32px;height:32px;font-size:14px">D</div><b>Dost</b><div class="online-badge"><span class="online-dot"></span><span id="myNum">--</span></div></div>
-<div class="peer-badge" id="peerIdBadge">connecting...</div>
+  <div class="logo"><div class="logo-icon">D</div><b>Dost</b><div class="online-badge"><span class="dot"></span><span id="myNumTop">...</span></div></div>
+  <div class="id-badge" id="myIdTop">ID: ...</div>
 </div>
 
-<!-- TABS -->
-<div id="tab-me" class="tab-content">
-<div class="profile-wrap">
-<div class="avatar"><img src="https://i.pravatar.cc/300?img=12" id="profileImg"><div class="online-green"></div><div class="cam" onclick="document.getElementById('fileIn').click()">📷</div></div>
-<input type="file" id="fileIn" hidden accept="image/*" onchange="changePhoto(event)">
-<div class="gallery-btn" onclick="document.getElementById('fileIn').click()">🖼️ Gallery Se Photo Chuno (Optional)</div>
-<div class="name" id="displayName">Rajjj kkk</div>
-<div class="meta">21 • De • Bottom • <span id="mobShow"></span></div>
-</div>
-<div style="padding:0 14px">
-<div style="font-size:11px;color:#5a627c;letter-spacing:1px;margin:14px 4px">CALL SETTINGS</div>
-<div class="call-card voice"><div class="call-left"><div class="icon-box">📞</div><div><div class="call-title">Voice Call <span class="on" id="vOn">● ON</span></div><div class="call-desc">Dost tumhe voice call kar sakte hain</div></div></div><div class="toggle" id="vToggle" onclick="toggleCall('voice')"><div class="knob"></div></div></div>
-<div class="call-card video"><div class="call-left"><div class="icon-box">📹</div><div><div class="call-title">Video Call <span class="on" id="vdOn">● ON</span></div><div class="call-desc">Dost tumhe video call kar sakte hain</div></div></div><div class="toggle" id="vdToggle" onclick="toggleCall('video')"><div class="knob"></div></div></div>
-<div style="font-size:11px;color:#ff8ab5;background:#1a1020;border:1px dashed #ff2d75;border-radius:12px;padding:10px;margin-top:12px">💡 Dusre phone me bhi yahi site kholo, alag number se login karo, fir Calls tab me uska number daal ke call karo — real call lagega!</div>
-<div style="font-size:11px;color:#ff5a5a;text-align:center;margin:18px;cursor:pointer" onclick="logout()">↪ Logout - Number change karo</div>
-</div>
-</div>
-
-<div id="tab-calls" class="tab-content hidden">
-<div class="dial-card">
-<div style="font-weight:700">📞 Kisi Dost ko Call Karo</div>
-<div style="font-size:12px;color:#8a91a8;margin-top:4px">Dusre ka mobile number daalo (jo is app me login hai)</div>
-<input id="dialNumber" class="dial-input" type="tel" maxlength="10" placeholder="98xxxxxxxx">
-<div style="display:flex;gap:10px"><button class="btn" style="background:#0f2a1e;border:1px solid #1a4a2e" onclick="makeCall('audio')">📞 Voice Call</button><button class="btn" onclick="makeCall('video')">📹 Video Call</button></div>
-<div id="callLog" style="font-size:12px;color:#5a627c;margin-top:10px"></div>
-</div>
-<div style="font-size:11px;color:#5a627c;letter-spacing:1px;margin:8px 4px">ONLINE DOST (DEMO)</div>
-<div id="userList"></div>
+<div id="loginPage" class="page">
+  <div class="card" style="margin-top:40px">
+    <h2 style="text-align:center">Apna Number Daalo</h2>
+    <p style="text-align:center;color:#94a3b8;font-size:13px;margin:8px 0">Har phone ka alag ID banega</p>
+    <input id="phoneInput" class="input" placeholder="10 digit number" type="tel" maxlength="10">
+    <input id="nameInput" class="input" placeholder="Apna naam likho e.g. Rajjj" type="text">
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-pink" onclick="doLogin()">Login Karo</button>
+    </div>
+    <div id="otpBox" style="display:none;margin-top:16px">
+      <div style="background:#1a233a;border:1px dashed #ec4899;border-radius:12px;padding:12px;text-align:center">
+        <div style="font-size:12px;color:#94a3b8">Tera OTP Code (Demo)</div>
+        <div id="otpCode" style="font-size:28px;font-weight:800;color:#22c55e;letter-spacing:6px">0000</div>
+      </div>
+      <input id="otpInput" class="input" placeholder="OTP daalo" maxlength="4" type="tel">
+      <button class="btn btn-pink" onclick="verifyOtp()">Verify & Login</button>
+    </div>
+  </div>
 </div>
 
-<div id="tab-nearby" class="tab-content hidden"><div style="text-align:center;padding:60px 20px;color:#5a627c">📍 Nearby — Jaldi ayega!<br><br>Abhi Calls tab use karo real call ke liye</div></div>
-<div id="tab-msgs" class="tab-content hidden"><div style="text-align:center;padding:60px 20px;color:#5a627c">💬 Msgs — Jaldi ayega!</div></div>
-<div id="tab-vip" class="tab-content hidden"><div style="text-align:center;padding:60px 20px;color:#5a627c">💎 VIP — Jaldi ayega!</div></div>
+<div id="mainApp" style="display:none">
+  <div id="pageNearby" class="page"> <div class="card"><h3>Nearby</h3><p style="color:#94a3b8;font-size:13px;margin-top:8px">Aas paas ke dost jald ayenge...</p></div> </div>
+  <div id="pageMsgs" class="page"> <div class="card"><h3>Messages</h3><p style="color:#94a3b8;font-size:13px;margin-top:8px">Chat feature jald ayega</p></div> </div>
+  <div id="pageCalls" class="page">
+    <div class="card">
+      <h3>📞 Kisi Dost ko Call Karo</h3>
+      <p style="color:#94a3b8;font-size:12px;margin:6px 0">Dusre ka mobile number daalo (jo is app me login hai)</p>
+      <input id="callNumber" class="input" placeholder="98xxxxxxxx" type="tel">
+      <div class="row" style="margin-top:10px">
+        <button class="btn btn-green" onclick="startCall(false)">📞 Voice Call</button>
+        <button class="btn btn-pink" onclick="startCall(true)">📹 Video Call</button>
+      </div>
+    </div>
+    <p style="color:#64748b;font-size:12px;letter-spacing:1px;margin:8px 4px">ONLINE DOST (DEMO)</p>
+    <div id="demoList"></div>
+  </div>
+  <div id="pageVip" class="page"> <div class="card"><h3>VIP</h3><p style="color:#94a3b8;font-size:13px">VIP features...</p></div> </div>
+  <div id="pageMe" class="page" style="text-align:center">
+    <div class="avatar-wrap">
+      <img id="myAvatar" class="avatar" src="https://i.pravatar.cc/300?img=3">
+      <div class="cam-btn" onclick="document.getElementById('photoFile').click()">📷</div>
+      <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="changePhoto(event)">
+    </div>
+    <button class="btn" style="background:#1e293b;color:#c084fc;border:1px solid #334155;width:auto;padding:8px 16px;border-radius:20px;font-size:13px" onclick="document.getElementById('photoFile').click()">🖼️ Gallery Se Photo Chuno (Optional)</button>
+    <h1 id="displayName" style="margin-top:16px;font-size:28px">Rajjj</h1>
+    <p id="displaySub" style="color:#94a3b8;font-size:14px;margin-top:4px"></p>
+    
+    <div style="text-align:left;margin-top:24px">
+      <p style="color:#64748b;font-size:11px;letter-spacing:2px;margin-bottom:8px">CALL SETTINGS</p>
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="display:flex;align-items:center;gap:8px"><span>📞</span><b>Voice Call</b><span id="voiceBadge" style="background:#14532d;color:#22c55e;padding:2px 8px;border-radius:10px;font-size:10px">● ON</span></div><div style="color:#64748b;font-size:12px;margin-top:4px">Dost tumhe voice call kar sakte hain</div></div>
+        <div id="voiceToggle" class="toggle on" onclick="toggleCall('voice')"><div></div></div>
+      </div>
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="display:flex;align-items:center;gap:8px"><span>📹</span><b>Video Call</b><span id="videoBadge" style="background:#14532d;color:#22c55e;padding:2px 8px;border-radius:10px;font-size:10px">● ON</span></div><div style="color:#64748b;font-size:12px;margin-top:4px">Dost tumhe video call kar sakte hain</div></div>
+        <div id="videoToggle" class="toggle on" onclick="toggleCall('video')"><div></div></div>
+      </div>
+    </div>
 
-<div class="bottom">
-<div class="bitem" onclick="switchTab('nearby')" id="b-nearby"><span class="bicon">📍</span>Nearby</div>
-<div class="bitem" onclick="switchTab('msgs')" id="b-msgs"><span class="bicon">💬</span>Msgs</div>
-<div class="bitem active" onclick="switchTab('calls')" id="b-calls"><span class="bicon">📞</span>Calls</div>
-<div class="bitem" onclick="switchTab('vip')" id="b-vip"><span class="bicon">💎</span>VIP</div>
-<div class="bitem" onclick="switchTab('me')" id="b-me"><span class="bicon">👤</span>Me</div>
-</div>
+    <div class="note">💡 Dusre phone me bhi yahi site kholo, alag number se login karo, fir Calls tab me uska number daal ke call karo — real call lagega!</div>
+    <div style="margin-top:16px;color:#ef4444;font-size:14px;cursor:pointer" onclick="logout()">↩ Logout - Number change karo</div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="switchTab('Nearby')"><span>📍</span>Nearby</div>
+    <div class="nav-item" onclick="switchTab('Msgs')"><span>💬</span>Msgs</div>
+    <div class="nav-item active" id="navCalls" onclick="switchTab('Calls')"><span>📞</span>Calls</div>
+    <div class="nav-item" onclick="switchTab('Vip')"><span>💎</span>VIP</div>
+    <div class="nav-item" id="navMe" onclick="switchTab('Me')"><span>👤</span>Me</div>
+  </div>
 </div>
 
-<!-- CALL OVERLAY -->
-<div id="callOverlay">
-<video id="remoteVideo" autoplay playsinline></video>
-<video id="localVideo" autoplay playsinline muted></video>
-<div class="call-status"><div style="background:rgba(0,0,0,.6);display:inline-block;padding:8px 16px;border-radius:20px;font-size:13px" id="callStatus">Connecting...</div><div style="margin-top:8px;font-weight:700" id="callPeer">--</div></div>
-<div class="call-controls">
-<button class="ctrl mute" onclick="toggleMute()">🎙️</button>
-<button class="ctrl end" onclick="endCall()">📞</button>
-<button class="ctrl mute" onclick="toggleVideo()">📹</button>
-</div>
-</div>
-
-<div id="incomingBox" class="incoming">
-<div class="inc-card">
-<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#ff2d75,#8a2df5);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:32px">📞</div>
-<div style="font-weight:800;font-size:18px" id="incName">Incoming Call</div>
-<div style="color:#8a91a8;font-size:13px;margin:6px 0 18px" id="incSub">Voice Call...</div>
-<div style="display:flex;gap:12px"><button class="btn" style="background:#2a3147" onclick="rejectCall()">❌ Reject</button><button class="btn" onclick="acceptCall()">✅ Accept</button></div>
-</div>
+<div id="callOverlay" class="call-overlay">
+  <div style="padding:12px;display:flex;justify-content:space-between;align-items:center;background:#0008;position:absolute;top:0;left:0;right:0;z-index:2">
+    <div style="background:#ffffff20;padding:6px 12px;border-radius:20px;font-size:13px" id="callStatus">Calling...</div>
+    <div style="font-weight:700" id="callPeer">...</div>
+  </div>
+  <div class="video-big">
+    <video id="remoteVideo" autoplay playsinline></video>
+    <video id="localVideo" autoplay playsinline muted style="display:none"></video>
+    <div class="video-small"><video id="localVideoSmall" autoplay playsinline muted></video></div>
+  </div>
+  <div class="call-controls">
+    <button class="ctrl mic" id="muteBtn" onclick="toggleMute()">🎙️</button>
+    <button class="ctrl end" onclick="endCall()">📞</button>
+    <button class="ctrl cam" id="camBtn" onclick="toggleCam()">📹</button>
+  </div>
 </div>
 
 <script>
-let currentOTP='', peer, localStream, currentCall, isMuted=false, isVideoOff=false, incomingCall=null;
-let settings={voice:true, video:true};
+let myNumber=null, myName=null, generatedOtp=null, peer=null, localStream=null, currentCall=null, isMuted=false, isCamOff=false;
+let voiceOn=true, videoOn=true;
 
-// OTP
-function sendOTP(){
- const m=document.getElementById('mobile').value.trim();
- if(m.length!=10){alert('Bhai 10 digit ka number daalo!');return}
- currentOTP=Math.floor(1000+Math.random()*9000).toString();
- document.getElementById('generatedCode').textContent=currentOTP;
- document.getElementById('step2').classList.add('show');
- document.getElementById('sendBtn').textContent='✓ Code: '+currentOTP;
- ['o1','o2','o3','o4'].forEach(id=>document.getElementById(id).value='');
- document.getElementById('o1').focus();
+function init(){
+  const savedNum = localStorage.getItem('dost_last_number');
+  if(savedNum){
+    const profile = JSON.parse(localStorage.getItem('dost_profile_'+savedNum)||'null');
+    if(profile){
+      myNumber=savedNum;
+      myName=profile.name;
+      showApp();
+      return;
+    }
+  }
+  document.getElementById('loginPage').style.display='block';
 }
-function moveNext(el,next){ if(el.value && next) document.getElementById(next).focus(); }
-function back(e,el,prev){ if(e.key==='Backspace' && !el.value && prev) document.getElementById(prev).focus(); }
-function doVerify(){ const c=['o1','o2','o3','o4'].map(i=>document.getElementById(i).value).join(''); if(c.length===4) verifyOTP(); }
-function verifyOTP(){
- const entered=['o1','o2','o3','o4'].map(i=>document.getElementById(i).value).join('');
- if(entered===currentOTP){
-  localStorage.setItem('dost_logged','yes');
-  localStorage.setItem('dost_mobile',document.getElementById('mobile').value);
-  startApp();
- } else if(entered.length===4){ alert('Galat code! Sahi: '+currentOTP); }
+
+function doLogin(){
+  const phone=document.getElementById('phoneInput').value.trim();
+  const name=document.getElementById('nameInput').value.trim();
+  if(phone.length!=10){alert('10 digit number daalo');return}
+  if(!name){alert('Apna naam likho');return}
+  myNumber=phone; myName=name;
+  generatedOtp=Math.floor(1000+Math.random()*9000).toString();
+  document.getElementById('otpCode').innerText=generatedOtp;
+  document.getElementById('otpBox').style.display='block';
+  document.getElementById('otpInput').value=generatedOtp; // auto fill for demo
 }
-function startApp(){
- document.getElementById('loginPage').classList.add('hidden');
- document.getElementById('mainApp').classList.remove('hidden');
- const mob=localStorage.getItem('dost_mobile')||'';
- document.getElementById('myNum').textContent=mob;
- document.getElementById('mobShow').textContent=mob;
- document.getElementById('displayName').textContent='Rajjj '+mob.slice(-3);
- const s=localStorage.getItem('dost_call_settings'); if(s) settings=JSON.parse(s);
- updateToggleUI();
- initPeer(mob);
- renderUsers();
+function verifyOtp(){
+  const inp=document.getElementById('otpInput').value.trim();
+  if(inp!==generatedOtp){alert('Galat OTP');return}
+  // save per number profile - FIX 1
+  const profile={name:myName, number:myNumber, photo:''};
+  localStorage.setItem('dost_profile_'+myNumber, JSON.stringify(profile));
+  localStorage.setItem('dost_last_number', myNumber);
+  showApp();
 }
-function toggleCall(type){
- if(type==='voice') settings.voice=!settings.voice;
- if(type==='video') settings.video=!settings.video;
- localStorage.setItem('dost_call_settings',JSON.stringify(settings));
- updateToggleUI();
+function showApp(){
+  const profile=JSON.parse(localStorage.getItem('dost_profile_'+myNumber));
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('mainApp').style.display='block';
+  document.getElementById('myNumTop').innerText=myNumber;
+  document.getElementById('myIdTop').innerText='ID: dost-'+myNumber;
+  document.getElementById('displayName').innerText=profile.name+' '+myNumber.slice(-3);
+  document.getElementById('displaySub').innerText='21 • De • Bottom • '+myNumber;
+  const savedPhoto=localStorage.getItem('dost_photo_'+myNumber);
+  if(savedPhoto) document.getElementById('myAvatar').src=savedPhoto;
+  initPeer();
+  renderDemo();
+  switchTab('Calls');
 }
-function updateToggleUI(){
- document.getElementById('vToggle').className='toggle'+(settings.voice?'':' off');
- document.getElementById('vdToggle').className='toggle'+(settings.video?'':' off');
- document.getElementById('vOn').textContent=settings.voice?'● ON':'● OFF';
- document.getElementById('vdOn').textContent=settings.video?'● ON':'● OFF';
- document.getElementById('vOn').style.color=settings.voice?'#00d084':'#ff5a5a';
- document.getElementById('vdOn').style.color=settings.video?'#00d084':'#ff5a5a';
+function logout(){
+  localStorage.removeItem('dost_last_number');
+  location.reload();
 }
 function switchTab(t){
- document.querySelectorAll('.tab-content').forEach(e=>e.classList.add('hidden'));
- document.getElementById('tab-'+t).classList.remove('hidden');
- document.querySelectorAll('.bitem').forEach(e=>e.classList.remove('active'));
- document.getElementById('b-'+t).classList.add('active');
-}
-function initPeer(mobile){
- const peerId='dost-'+mobile;
- peer=new Peer(peerId,{debug:1});
- peer.on('open',id=>{
-  document.getElementById('peerIdBadge').textContent='ID: '+id;
- });
- peer.on('call',call=>{
-  // check settings
-  if(call.metadata && call.metadata.type==='video' && !settings.video){ call.close(); return; }
-  if(call.metadata && call.metadata.type==='audio' && !settings.voice){ call.close(); return; }
-  incomingCall=call;
-  document.getElementById('incName').textContent=call.peer.replace('dost-','');
-  document.getElementById('incSub').textContent=(call.metadata?.type==='video'?'Video':'Voice')+' Call...';
-  document.getElementById('incomingBox').classList.add('show');
- });
- peer.on('error',e=>{
-  console.log(e);
-  document.getElementById('callLog').textContent='Peer error: '+e.type+' - dusra number online hai kya check karo';
- });
-}
-async function getMedia(isVideo){
- try{
-  const stream=await navigator.mediaDevices.getUserMedia({audio:true, video:isVideo});
-  return stream;
- }catch(err){ alert('Camera/Mic permission do bhai! '+err.message); throw err; }
-}
-async function makeCall(type){
- const num=document.getElementById('dialNumber').value.trim();
- if(num.length!=10){alert('10 digit number daalo jisko call karna hai');return}
- const target='dost-'+num;
- const isVideo=type==='video';
- if(isVideo && !settings.video){alert('Tumhara Video Call OFF hai, Me tab me ON karo');return}
- try{
-  localStream=await getMedia(isVideo);
-  showCallUI(target, type);
-  const call=peer.call(target, localStream, {metadata:{type:type}});
-  handleCall(call);
- }catch(e){}
-}
-function handleCall(call){
- currentCall=call;
- call.on('stream',remoteStream=>{
-  document.getElementById('remoteVideo').srcObject=remoteStream;
-  document.getElementById('callStatus').textContent='Connected • '+ (call.metadata?.type==='video'?'Video':'Voice');
- });
- call.on('close',()=>endCall());
- call.on('error',()=>endCall());
-}
-async function acceptCall(){
- if(!incomingCall) return;
- const isVideo=incomingCall.metadata?.type==='video';
- try{
-  localStream=await getMedia(isVideo);
-  document.getElementById('incomingBox').classList.remove('show');
-  showCallUI(incomingCall.peer, incomingCall.metadata?.type);
-  incomingCall.answer(localStream);
-  handleCall(incomingCall);
-  incomingCall=null;
- }catch(e){}
-}
-function rejectCall(){
- if(incomingCall){ incomingCall.close(); incomingCall=null; }
- document.getElementById('incomingBox').classList.remove('show');
-}
-function showCallUI(peerId, type){
- document.getElementById('callOverlay').classList.add('show');
- document.getElementById('callPeer').textContent=peerId.replace('dost-','')+' • '+(type==='video'?'Video':'Voice');
- document.getElementById('callStatus').textContent='Calling...';
- document.getElementById('localVideo').srcObject=localStream;
- document.getElementById('localVideo').style.display= type==='video'?'block':'none';
- document.getElementById('remoteVideo').style.display='block';
-}
-function endCall(){
- if(currentCall) currentCall.close();
- if(localStream) localStream.getTracks().forEach(t=>t.stop());
- document.getElementById('callOverlay').classList.remove('show');
- document.getElementById('remoteVideo').srcObject=null;
- currentCall=null; localStream=null;
- document.getElementById('callLog').textContent='Call ended';
-}
-function toggleMute(){
- if(!localStream) return;
- isMuted=!isMuted;
- localStream.getAudioTracks().forEach(t=>t.enabled=!isMuted);
- document.getElementById('callStatus').textContent=isMuted?'Muted':'Connected';
-}
-function toggleVideo(){
- if(!localStream) return;
- isVideoOff=!isVideoOff;
- localStream.getVideoTracks().forEach(t=>t.enabled=!isVideoOff);
+  ['Nearby','Msgs','Calls','Vip','Me'].forEach(x=>{
+    document.getElementById('page'+x).style.display = (x===t)?'block':'none';
+  });
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  if(t==='Calls') document.getElementById('navCalls').classList.add('active');
+  if(t==='Me') document.getElementById('navMe').classList.add('active');
 }
 function changePhoto(e){
- const f=e.target.files[0]; if(!f) return;
- const url=URL.createObjectURL(f);
- document.getElementById('profileImg').src=url;
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    document.getElementById('myAvatar').src=ev.target.result;
+    localStorage.setItem('dost_photo_'+myNumber, ev.target.result);
+    // update profile
+    let p=JSON.parse(localStorage.getItem('dost_profile_'+myNumber));
+    p.photo=ev.target.result;
+    localStorage.setItem('dost_profile_'+myNumber, JSON.stringify(p));
+  };
+  reader.readAsDataURL(file);
 }
-function renderUsers(){
- const list=[{name:'Aman',age:22,img:32},{name:'Rahul',age:24,img:33},{name:'Vikram',age:21,img:15},{name:'Karan',age:23,img:68}];
- const html=list.map(u=>`
-  <div class="user-row"><div class="user-info"><img class="uavatar" src="https://i.pravatar.cc/100?img=${u.img}"><div><div style="font-weight:600">${u.name} • ${u.age}</div><div style="font-size:11px;color:#00d084">● Online • call ke liye number mang lo</div></div></div><div class="call-btns"><button class="cbtn voice" onclick="document.getElementById('dialNumber').value='98'+Math.floor(10000000+Math.random()*9000000);makeCall('audio')">📞</button><button class="cbtn video" onclick="document.getElementById('dialNumber').value='98'+Math.floor(10000000+Math.random()*9000000);makeCall('video')">📹</button></div></div>
- `).join('');
- document.getElementById('userList').innerHTML=html;
+function toggleCall(type){
+  if(type==='voice'){ voiceOn=!voiceOn; document.getElementById('voiceToggle').classList.toggle('on',voiceOn); document.getElementById('voiceBadge').innerText=voiceOn?'● ON':'● OFF'; }
+  else { videoOn=!videoOn; document.getElementById('videoToggle').classList.toggle('on',videoOn); document.getElementById('videoBadge').innerText=videoOn?'● ON':'● OFF'; }
 }
-function logout(){ localStorage.removeItem('dost_logged'); if(peer) peer.destroy(); location.reload(); }
-if(localStorage.getItem('dost_logged')==='yes'){ startApp(); }
+function renderDemo(){
+  const list=[{n:'Aman',a:22},{n:'Rahul',a:24},{n:'Vikram',a:21},{n:'Karan',a:23}];
+  document.getElementById('demoList').innerHTML=list.map(u=>`
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center;padding:12px">
+      <div style="display:flex;align-items:center;gap:12px"><img src="https://i.pravatar.cc/100?img=${u.a}" style="width:48px;height:48px;border-radius:50%"><div><b>${u.n} • ${u.a}</b><div class="badge-demo">● Online • call ke liye number mang lo</div></div></div>
+      <div style="display:flex;gap:8px"><button style="width:36px;height:36px;border-radius:50%;border:none;background:#0f3d2e">📞</button><button style="width:36px;height:36px;border-radius:50%;border:none;background:#3f1a2a">📹</button></div>
+    </div>
+  `).join('');
+}
+function initPeer(){
+  if(peer) peer.destroy();
+  peer=new Peer('dost-'+myNumber);
+  peer.on('open', id=>console.log('peer open',id));
+  peer.on('call', async call=>{
+    if(!voiceOn && !call.metadata.isVideo){ call.close(); return; }
+    if(!videoOn && call.metadata.isVideo){ call.close(); alert('Video call OFF hai - Me me ON karo'); return; }
+    const accept=confirm(call.metadata.from+' se '+(call.metadata.isVideo?'Video':'Voice')+' call aa rahi hai - Accept karu?');
+    if(!accept){ call.close(); return; }
+    try{
+      localStream=await navigator.mediaDevices.getUserMedia({video: call.metadata.isVideo?{facingMode:'user'}:false, audio:true});
+      document.getElementById('localVideoSmall').srcObject=localStream;
+      call.answer(localStream);
+      handleCall(call, call.metadata.isVideo);
+    }catch(e){ alert('Camera/mic permission do'); }
+  });
+}
+async function startCall(isVideo){
+  const num=document.getElementById('callNumber').value.trim();
+  if(!num || num.length<10){ alert('Sahi number daalo'); return; }
+  if(num===myNumber){ alert('Khud ko call nahi kar sakte'); return; }
+  try{
+    localStream=await navigator.mediaDevices.getUserMedia({video:isVideo?{facingMode:'user'}:false, audio:true});
+    document.getElementById('localVideoSmall').srcObject=localStream;
+    const call=peer.call('dost-'+num, localStream, {metadata:{from:myNumber, isVideo}});
+    handleCall(call,isVideo);
+  }catch(e){ alert('Camera/mic permission chahiye - '+e.message); }
+}
+function handleCall(call,isVideo){
+  currentCall=call;
+  document.getElementById('callOverlay').classList.add('active');
+  document.getElementById('callPeer').innerText=call.peer.replace('dost-','')+' • '+(isVideo?'Video':'Voice');
+  document.getElementById('callStatus').innerText='Connecting...';
+  document.getElementById('remoteVideo').style.display=isVideo?'block':'none';
+  document.getElementById('localVideo').style.display=isVideo?'none':'block';
+  if(!isVideo) document.getElementById('localVideo').srcObject=localStream;
+
+  call.on('stream', remoteStream=>{
+    document.getElementById('callStatus').innerText='Connected • '+(isVideo?'Video':'Voice');
+    if(isVideo) document.getElementById('remoteVideo').srcObject=remoteStream;
+    else document.getElementById('localVideo').srcObject=remoteStream;
+  });
+  call.on('close', ()=>endCall());
+  call.on('error', ()=>endCall());
+}
+function endCall(){
+  if(currentCall) currentCall.close();
+  if(localStream) localStream.getTracks().forEach(t=>t.stop());
+  document.getElementById('callOverlay').classList.remove('active');
+  currentCall=null; localStream=null;
+}
+function toggleMute(){
+  if(!localStream) return;
+  isMuted=!isMuted;
+  localStream.getAudioTracks().forEach(t=>t.enabled=!isMuted);
+  document.getElementById('muteBtn').innerText=isMuted?'🔇':'🎙️';
+}
+function toggleCam(){
+  if(!localStream) return;
+  isCamOff=!isCamOff;
+  localStream.getVideoTracks().forEach(t=>t.enabled=!isCamOff);
+  document.getElementById('camBtn').innerText=isCamOff?'🚫':'📹';
+}
+init();
 </script>
 </body>
 </html>
-
