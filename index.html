@@ -21,300 +21,375 @@
 })();
 </script><script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Dost - Real Call</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dost - Final Fixed</title>
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family: -apple-system, BlinkMacSystemFont, sans-serif;}
-body{background:#0f172a;color:#fff;min-height:100vh;overflow-x:hidden}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0f172a;border-bottom:1px solid #1e293b;position:sticky;top:0;z-index:10}
-.logo{display:flex;align-items:center;gap:8px}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#ec4899,#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800}
-.online-badge{background:#1e293b;border:1px solid #334155;padding:4px 12px;border-radius:20px;font-size:13px;display:flex;align-items:center;gap:6px}
-.dot{width:8px;height:8px;background:#22c55e;border-radius:50%;box-shadow:0 0 6px #22c55e}
-.id-badge{border:1px solid #ec4899;color:#ec4899;padding:4px 10px;border-radius:20px;font-size:11px}
-.page{padding:16px;padding-bottom:90px}
-.card{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:16px;margin-bottom:16px}
-.avatar-wrap{position:relative;width:140px;height:140px;margin:20px auto}
-.avatar{width:140px;height:140px;border-radius:50%;border:4px solid transparent;background:linear-gradient(#1e293b,#1e293b) padding-box, linear-gradient(135deg,#ec4899,#8b5cf6) border-box;object-fit:cover}
-.cam-btn{position:absolute;bottom:4px;right:4px;width:36px;height:36px;background:#1e293b;border:2px solid #ec4899;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.input{width:100%;background:#0f172a;border:1px solid #334155;border-radius:14px;padding:14px;color:#fff;outline:none;margin:8px 0;font-size:15px}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer}
-.btn-pink{background:linear-gradient(135deg,#ec4899,#8b5cf6);color:#fff}
-.btn-green{background:#0f3d2e;color:#86efac;border:1px solid #14532d}
-.row{display:flex;gap:12px}
-.toggle{width:56px;height:32px;background:#334155;border-radius:20px;position:relative;cursor:pointer;transition:.3s}
-.toggle.on{background:#22c55e}
-.toggle div{width:26px;height:26px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.3s}
-.toggle.on div{left:27px}
-.call-overlay{position:fixed;inset:0;background:#000;z-index:100;display:none;flex-direction:column}
-.call-overlay.active{display:flex}
-.video-big{flex:1;background:#111;position:relative;overflow:hidden}
-.video-big video{width:100%;height:100%;object-fit:cover}
-.video-small{position:absolute;top:80px;right:16px;width:120px;height:160px;border:2px solid #ec4899;border-radius:16px;overflow:hidden;background:#222}
-.video-small video{width:100%;height:100%;object-fit:cover}
-.call-controls{padding:20px;display:flex;justify-content:center;gap:20px;background:linear-gradient(transparent,#0009)}
-.ctrl{width:56px;height:56px;border-radius:50%;border:none;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.ctrl.mic{background:#1e293b;color:#fff}
-.ctrl.end{background:#ec4899;color:#fff;width:64px;height:64px;font-size:28px}
-.ctrl.cam{background:#1e293b;color:#fff}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0f172a;border-top:1px solid #1e293b;display:flex;justify-content:space-around;padding:10px 0}
-.nav-item{display:flex;flex-direction:column;align-items:center;font-size:11px;color:#64748b;cursor:pointer;gap:4px}
-.nav-item.active{color:#38bdf8}
-.badge-demo{font-size:10px;color:#22c55e;margin-top:4px}
-.note{border:1px dashed #ec4899;background:#ec48991a;padding:12px;border-radius:12px;font-size:13px;margin-top:12px;color:#f9a8d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:white;font-family:system-ui;padding-bottom:70px}
+.top{position:sticky;top:0;z-index:10;background:#0a0a0a;padding:10px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #222}
+.search{flex:1;background:#1a1a1a;border-radius:22px;padding:10px 14px;display:flex;align-items:center;gap:8px;color:#888}
+.chips{display:flex;gap:8px;overflow:auto;padding:10px 12px}
+.chip{padding:8px 16px;border-radius:20px;background:#1e1e1e;border:1px solid #333;color:#aaa;white-space:nowrap;font-size:13px}
+.chip.active{background:white;color:black;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:0 2px}
+.card{position:relative;height:210px;overflow:hidden;background:#1a1a1a;cursor:pointer}
+.card img{width:100%;height:100%;object-fit:cover}
+.card .overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.9));padding:30px 6px 6px}
+.card .name{font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.card .actions{position:absolute;top:6px;right:6px;display:flex;gap:6px}
+.ibtn{width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:white;font-size:14px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);cursor:pointer}
+.input, .textarea{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#1a1a1a;color:white;margin:8px 0}
+.textarea{min-height:80px;resize:vertical}
+.btn-main{width:100%;background:#ffcc00;color:black;padding:14px;border:none;border-radius:12px;font-weight:800;margin-top:8px;cursor:pointer}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#0a0a0a;border-top:1px solid #222;display:flex;justify-content:space-around;padding:8px 0}
+.tab{border:none;background:none;color:#666;font-size:11px;text-align:center;cursor:pointer}
+.tab.active{color:#ffcc00}
+.login{position:fixed;inset:0;background:#0a0a0a;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:#1a1a1a;border-radius:20px;padding:20px;width:100%;max-width:380px;border:1px solid #333}
+.profile-box{padding:16px}
+.p-row{background:#1a1a1a;border-radius:14px;padding:14px;margin:8px 0;border:1px solid #222;text-align:left}
+.chat-window, .detail-window{position:fixed;inset:0;background:#0a0a0a;z-index:50;display:none;flex-direction:column}
+.chat-header, .detail-header{padding:12px;background:#1a1a1a;border-bottom:1px solid #333;display:flex;align-items:center;gap:10px}
+.chat-msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:70%;padding:10px 14px;border-radius:18px;font-size:14px;word-break:break-word}
+.msg.me{background:#ffcc00;color:black;align-self:flex-end}
+.msg.other{background:#1e1e1e;color:white;align-self:flex-start}
+.chat-input{display:flex;gap:8px;padding:10px;background:#1a1a1a;border-top:1px solid #333}
+#videoModal{position:fixed;inset:0;background:black;z-index:200;display:none;flex-direction:column}
+#videoModal video{flex:1;width:100%;object-fit:cover}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="logo"><div class="logo-icon">D</div><b>Dost</b><div class="online-badge"><span class="dot"></span><span id="myNumTop">...</span></div></div>
-  <div class="id-badge" id="myIdTop">ID: ...</div>
+<div id="loginPage" class="login">
+<div class="login-box">
+<h2 style="text-align:center">Profile Banao</h2>
+<input id="lName" class="input" placeholder="Naam">
+<input id="lNum" class="input" placeholder="Number (alag-alag)">
+<input id="lAge" class="input" placeholder="Age">
+<textarea id="lBio" class="textarea" placeholder="Apne Bare Mein likho (bio)"></textarea>
+<input type="file" id="lPhoto" accept="image/*" class="input">
+<button onclick="doLogin()" class="btn-main">Save & Start</button>
+</div>
 </div>
 
-<div id="loginPage" class="page">
-  <div class="card" style="margin-top:40px">
-    <h2 style="text-align:center">Apna Number Daalo</h2>
-    <p style="text-align:center;color:#94a3b8;font-size:13px;margin:8px 0">Har phone ka alag ID banega</p>
-    <input id="phoneInput" class="input" placeholder="10 digit number" type="tel" maxlength="10">
-    <input id="nameInput" class="input" placeholder="Apna naam likho e.g. Rajjj" type="text">
-    <div class="row" style="margin-top:12px">
-      <button class="btn btn-pink" onclick="doLogin()">Login Karo</button>
-    </div>
-    <div id="otpBox" style="display:none;margin-top:16px">
-      <div style="background:#1a233a;border:1px dashed #ec4899;border-radius:12px;padding:12px;text-align:center">
-        <div style="font-size:12px;color:#94a3b8">Tera OTP Code (Demo)</div>
-        <div id="otpCode" style="font-size:28px;font-weight:800;color:#22c55e;letter-spacing:6px">0000</div>
-      </div>
-      <input id="otpInput" class="input" placeholder="OTP daalo" maxlength="4" type="tel">
-      <button class="btn btn-pink" onclick="verifyOtp()">Verify & Login</button>
-    </div>
-  </div>
+<div id="onlinePage">
+<div class="top">
+<div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:#333"><img id="topMeImg" src="" style="width:100%;height:100%;object-fit:cover"></div>
+<div class="search">🔍 Explore more profiles</div>
+</div>
+<div class="chips">
+<div class="chip">⚙️ Filters</div>
+<div class="chip active">Online Now</div>
+<div class="chip">Popular</div>
+</div>
+<div id="onlineGrid" class="grid"></div>
 </div>
 
-<div id="mainApp" style="display:none">
-  <div id="pageNearby" class="page"> <div class="card"><h3>Nearby</h3><p style="color:#94a3b8;font-size:13px;margin-top:8px">Aas paas ke dost jald ayenge...</p></div> </div>
-  <div id="pageMsgs" class="page"> <div class="card"><h3>Messages</h3><p style="color:#94a3b8;font-size:13px;margin-top:8px">Chat feature jald ayega</p></div> </div>
-  <div id="pageCalls" class="page">
-    <div class="card">
-      <h3>📞 Kisi Dost ko Call Karo</h3>
-      <p style="color:#94a3b8;font-size:12px;margin:6px 0">Dusre ka mobile number daalo (jo is app me login hai)</p>
-      <input id="callNumber" class="input" placeholder="98xxxxxxxx" type="tel">
-      <div class="row" style="margin-top:10px">
-        <button class="btn btn-green" onclick="startCall(false)">📞 Voice Call</button>
-        <button class="btn btn-pink" onclick="startCall(true)">📹 Video Call</button>
-      </div>
-    </div>
-    <p style="color:#64748b;font-size:12px;letter-spacing:1px;margin:8px 4px">ONLINE DOST (DEMO)</p>
-    <div id="demoList"></div>
-  </div>
-  <div id="pageVip" class="page"> <div class="card"><h3>VIP</h3><p style="color:#94a3b8;font-size:13px">VIP features...</p></div> </div>
-  <div id="pageMe" class="page" style="text-align:center">
-    <div class="avatar-wrap">
-      <img id="myAvatar" class="avatar" src="https://i.pravatar.cc/300?img=3">
-      <div class="cam-btn" onclick="document.getElementById('photoFile').click()">📷</div>
-      <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="changePhoto(event)">
-    </div>
-    <button class="btn" style="background:#1e293b;color:#c084fc;border:1px solid #334155;width:auto;padding:8px 16px;border-radius:20px;font-size:13px" onclick="document.getElementById('photoFile').click()">🖼️ Gallery Se Photo Chuno (Optional)</button>
-    <h1 id="displayName" style="margin-top:16px;font-size:28px">Rajjj</h1>
-    <p id="displaySub" style="color:#94a3b8;font-size:14px;margin-top:4px"></p>
-    
-    <div style="text-align:left;margin-top:24px">
-      <p style="color:#64748b;font-size:11px;letter-spacing:2px;margin-bottom:8px">CALL SETTINGS</p>
-      <div class="card" style="display:flex;justify-content:space-between;align-items:center">
-        <div><div style="display:flex;align-items:center;gap:8px"><span>📞</span><b>Voice Call</b><span id="voiceBadge" style="background:#14532d;color:#22c55e;padding:2px 8px;border-radius:10px;font-size:10px">● ON</span></div><div style="color:#64748b;font-size:12px;margin-top:4px">Dost tumhe voice call kar sakte hain</div></div>
-        <div id="voiceToggle" class="toggle on" onclick="toggleCall('voice')"><div></div></div>
-      </div>
-      <div class="card" style="display:flex;justify-content:space-between;align-items:center">
-        <div><div style="display:flex;align-items:center;gap:8px"><span>📹</span><b>Video Call</b><span id="videoBadge" style="background:#14532d;color:#22c55e;padding:2px 8px;border-radius:10px;font-size:10px">● ON</span></div><div style="color:#64748b;font-size:12px;margin-top:4px">Dost tumhe video call kar sakte hain</div></div>
-        <div id="videoToggle" class="toggle on" onclick="toggleCall('video')"><div></div></div>
-      </div>
-    </div>
-
-    <div class="note">💡 Dusre phone me bhi yahi site kholo, alag number se login karo, fir Calls tab me uska number daal ke call karo — real call lagega!</div>
-    <div style="margin-top:16px;color:#ef4444;font-size:14px;cursor:pointer" onclick="logout()">↩ Logout - Number change karo</div>
-  </div>
-
-  <div class="bottom-nav">
-    <div class="nav-item" onclick="switchTab('Nearby')"><span>📍</span>Nearby</div>
-    <div class="nav-item" onclick="switchTab('Msgs')"><span>💬</span>Msgs</div>
-    <div class="nav-item active" id="navCalls" onclick="switchTab('Calls')"><span>📞</span>Calls</div>
-    <div class="nav-item" onclick="switchTab('Vip')"><span>💎</span>VIP</div>
-    <div class="nav-item" id="navMe" onclick="switchTab('Me')"><span>👤</span>Me</div>
-  </div>
+<div id="msgsPage" style="display:none">
+<div class="top"><b>Messages</b> • <span id="msgCount" style="color:#22c55e">0 online</span></div>
+<div id="msgsList" style="padding:8px"></div>
 </div>
 
-<div id="callOverlay" class="call-overlay">
-  <div style="padding:12px;display:flex;justify-content:space-between;align-items:center;background:#0008;position:absolute;top:0;left:0;right:0;z-index:2">
-    <div style="background:#ffffff20;padding:6px 12px;border-radius:20px;font-size:13px" id="callStatus">Calling...</div>
-    <div style="font-weight:700" id="callPeer">...</div>
-  </div>
-  <div class="video-big">
-    <video id="remoteVideo" autoplay playsinline></video>
-    <video id="localVideo" autoplay playsinline muted style="display:none"></video>
-    <div class="video-small"><video id="localVideoSmall" autoplay playsinline muted></video></div>
-  </div>
-  <div class="call-controls">
-    <button class="ctrl mic" id="muteBtn" onclick="toggleMute()">🎙️</button>
-    <button class="ctrl end" onclick="endCall()">📞</button>
-    <button class="ctrl cam" id="camBtn" onclick="toggleCam()">📹</button>
-  </div>
+<div id="profilePage" style="display:none">
+<div class="top"><b>Profile • Apne bare me</b></div>
+<div class="profile-box" style="text-align:center">
+<img id="meImg" src="" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid #ffcc00;margin:0 auto;display:block">
+<h2 id="meName" style="margin-top:10px"></h2>
+<p id="meNum" style="color:#888;font-size:13px"></p>
+<div class="p-row"><b>Bio:</b><br><span id="meBio" style="color:#ccc;white-space:pre-wrap"></span></div>
+<div class="p-row">
+<input id="editName" class="input" placeholder="Naam">
+<input id="editAge" class="input" placeholder="Age">
+<textarea id="editBio" class="textarea" placeholder="Apne Bare Mein (bio)"></textarea>
+<input type="file" id="editPhoto" accept="image/*" class="input">
+<button onclick="saveProfile()" class="btn-main">Save Profile</button>
+</div>
+<button onclick="logout()" style="background:none;border:none;color:#ef4444;margin-top:10px">Logout</button>
+</div>
+</div>
+
+<div class="tabs">
+<button class="tab" id="tab-profile" onclick="showTab('profile')">👤<br>Profile</button>
+<button class="tab active" id="tab-online" onclick="showTab('online')">🟢<br>Online</button>
+<button class="tab" id="tab-msgs" onclick="showTab('msgs')">💬<br>Message</button>
+</div>
+
+<!-- DETAIL WINDOW -->
+<div id="detailWindow" class="detail-window">
+<div class="detail-header">
+<button onclick="closeDetail()" style="background:none;border:none;color:white;font-size:20px">←</button>
+<b>Profile Detail</b>
+</div>
+<div style="flex:1;overflow:auto;padding:16px;text-align:center">
+<img id="detailImg" src="" style="width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid #ffcc00;margin:0 auto;display:block">
+<h2 id="detailName" style="margin-top:12px"></h2>
+<p id="detailMeta" style="color:#888;font-size:13px;margin-top:4px"></p>
+<div style="background:#1a1a1a;border-radius:14px;padding:14px;margin-top:16px;text-align:left;border:1px solid #333">
+<b>About:</b><br><span id="detailBio" style="color:#ccc;white-space:pre-wrap"></span>
+</div>
+<div style="display:flex;gap:10px;margin-top:20px">
+<button id="detailMsgBtn" class="btn-main" style="flex:1">💬 Message Karo</button>
+<div style="display:flex;gap:8px"><button id="detailVoiceBtn" class="ibtn" style="width:50px;height:50px;background:#14532d">📞</button><button id="detailVideoBtn" class="ibtn" style="width:50px;height:50px;background:#4c0519">📹</button></div>
+</div>
+</div>
+</div>
+
+<!-- CHAT WINDOW -->
+<div id="chatWindow" class="chat-window">
+<div class="chat-header">
+<button onclick="closeChat()" style="background:none;border:none;color:white;font-size:20px">←</button>
+<img id="chatImg" src="" style="width:36px;height:36px;border-radius:50%;object-fit:cover">
+<div><div id="chatName" style="font-weight:700"></div><div id="chatStatus" style="font-size:11px"></div></div>
+<div style="margin-left:auto;display:flex;gap:8px">
+<button onclick="chatVoiceCall()" class="ibtn">📞</button>
+<button onclick="chatVideoCall()" class="ibtn">📹</button>
+</div>
+</div>
+<div id="chatMsgs" class="chat-msgs"></div>
+<div class="chat-input">
+<input id="chatInput" class="input" placeholder="Say something..." style="margin:0;flex:1">
+<button onclick="sendMsg()" style="background:#ffcc00;border:none;border-radius:50%;width:44px;height:44px;font-weight:800">➤</button>
+</div>
+</div>
+
+<div id="videoModal">
+<video id="remoteVideo" autoplay playsinline></video>
+<video id="localVideo" autoplay muted playsinline style="position:absolute;bottom:90px;right:10px;width:110px;height:150px;border-radius:12px;border:2px solid white;object-fit:cover"></video>
+<div style="padding:14px;display:flex;justify-content:center;background:#111"><button onclick="endCall()" style="background:#ef4444;color:white;border:none;padding:12px 24px;border-radius:30px;font-weight:800">❌ Kaat Do</button></div>
 </div>
 
 <script>
-let myNumber=null, myName=null, generatedOtp=null, peer=null, localStream=null, currentCall=null, isMuted=false, isCamOff=false;
-let voiceOn=true, videoOn=true;
+let myProfile = JSON.parse(localStorage.getItem('dost_3final')||'null');
+let peer, currentCall, gun, gunRoom;
+let allUsers = {};
+let currentChatUser = null;
+let detailUser = null;
 
-function init(){
-  const savedNum = localStorage.getItem('dost_last_number');
-  if(savedNum){
-    const profile = JSON.parse(localStorage.getItem('dost_profile_'+savedNum)||'null');
-    if(profile){
-      myNumber=savedNum;
-      myName=profile.name;
-      showApp();
-      return;
+function initGun(){
+  gun = Gun({peers:['https://gun-manhattan.herokuapp.com/gun','https://gun-us.herokuapp.com/gun']});
+  gunRoom = gun.get('dost-final-3page-v11-bio-fix');
+  gunRoom.get('users').map().on((data,key)=>{
+    if(!data || !data.num) return;
+    allUsers[key]=data;
+    renderOnline();
+    renderMsgsList();
+  });
+  gunRoom.get('chats').map().map().on((msg)=>{
+    if(!msg || !myProfile) return;
+    if(currentChatUser && ((msg.from===myProfile.num && msg.to===currentChatUser.num) || (msg.to===myProfile.num && msg.from===currentChatUser.num))){
+      addMsgToUI(msg);
     }
-  }
-  document.getElementById('loginPage').style.display='block';
+  });
 }
 
-function doLogin(){
-  const phone=document.getElementById('phoneInput').value.trim();
-  const name=document.getElementById('nameInput').value.trim();
-  if(phone.length!=10){alert('10 digit number daalo');return}
-  if(!name){alert('Apna naam likho');return}
-  myNumber=phone; myName=name;
-  generatedOtp=Math.floor(1000+Math.random()*9000).toString();
-  document.getElementById('otpCode').innerText=generatedOtp;
-  document.getElementById('otpBox').style.display='block';
-  document.getElementById('otpInput').value=generatedOtp; // auto fill for demo
+function pushUser(){
+  if(!myProfile || !gunRoom) return;
+  myProfile.time=Date.now();
+  myProfile.online=true;
+  gunRoom.get('users').get('user_'+myProfile.num).put(myProfile);
 }
-function verifyOtp(){
-  const inp=document.getElementById('otpInput').value.trim();
-  if(inp!==generatedOtp){alert('Galat OTP');return}
-  // save per number profile - FIX 1
-  const profile={name:myName, number:myNumber, photo:''};
-  localStorage.setItem('dost_profile_'+myNumber, JSON.stringify(profile));
-  localStorage.setItem('dost_last_number', myNumber);
-  showApp();
-}
-function showApp(){
-  const profile=JSON.parse(localStorage.getItem('dost_profile_'+myNumber));
-  document.getElementById('loginPage').style.display='none';
-  document.getElementById('mainApp').style.display='block';
-  document.getElementById('myNumTop').innerText=myNumber;
-  document.getElementById('myIdTop').innerText='ID: dost-'+myNumber;
-  document.getElementById('displayName').innerText=profile.name+' '+myNumber.slice(-3);
-  document.getElementById('displaySub').innerText='21 • De • Bottom • '+myNumber;
-  const savedPhoto=localStorage.getItem('dost_photo_'+myNumber);
-  if(savedPhoto) document.getElementById('myAvatar').src=savedPhoto;
-  initPeer();
-  renderDemo();
-  switchTab('Calls');
-}
-function logout(){
-  localStorage.removeItem('dost_last_number');
-  location.reload();
-}
-function switchTab(t){
-  ['Nearby','Msgs','Calls','Vip','Me'].forEach(x=>{
-    document.getElementById('page'+x).style.display = (x===t)?'block':'none';
-  });
-  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-  if(t==='Calls') document.getElementById('navCalls').classList.add('active');
-  if(t==='Me') document.getElementById('navMe').classList.add('active');
-}
-function changePhoto(e){
-  const file=e.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    document.getElementById('myAvatar').src=ev.target.result;
-    localStorage.setItem('dost_photo_'+myNumber, ev.target.result);
-    // update profile
-    let p=JSON.parse(localStorage.getItem('dost_profile_'+myNumber));
-    p.photo=ev.target.result;
-    localStorage.setItem('dost_profile_'+myNumber, JSON.stringify(p));
-  };
-  reader.readAsDataURL(file);
-}
-function toggleCall(type){
-  if(type==='voice'){ voiceOn=!voiceOn; document.getElementById('voiceToggle').classList.toggle('on',voiceOn); document.getElementById('voiceBadge').innerText=voiceOn?'● ON':'● OFF'; }
-  else { videoOn=!videoOn; document.getElementById('videoToggle').classList.toggle('on',videoOn); document.getElementById('videoBadge').innerText=videoOn?'● ON':'● OFF'; }
-}
-function renderDemo(){
-  const list=[{n:'Aman',a:22},{n:'Rahul',a:24},{n:'Vikram',a:21},{n:'Karan',a:23}];
-  document.getElementById('demoList').innerHTML=list.map(u=>`
-    <div class="card" style="display:flex;justify-content:space-between;align-items:center;padding:12px">
-      <div style="display:flex;align-items:center;gap:12px"><img src="https://i.pravatar.cc/100?img=${u.a}" style="width:48px;height:48px;border-radius:50%"><div><b>${u.n} • ${u.a}</b><div class="badge-demo">● Online • call ke liye number mang lo</div></div></div>
-      <div style="display:flex;gap:8px"><button style="width:36px;height:36px;border-radius:50%;border:none;background:#0f3d2e">📞</button><button style="width:36px;height:36px;border-radius:50%;border:none;background:#3f1a2a">📹</button></div>
-    </div>
-  `).join('');
-}
-function initPeer(){
-  if(peer) peer.destroy();
-  peer=new Peer('dost-'+myNumber);
-  peer.on('open', id=>console.log('peer open',id));
+
+function initPeer(num){
+  peer = new Peer('dost-'+num, {config:{iceServers:[{urls:'stun:stun.l.google.com:19302'}]}});
   peer.on('call', async call=>{
-    if(!voiceOn && !call.metadata.isVideo){ call.close(); return; }
-    if(!videoOn && call.metadata.isVideo){ call.close(); alert('Video call OFF hai - Me me ON karo'); return; }
-    const accept=confirm(call.metadata.from+' se '+(call.metadata.isVideo?'Video':'Voice')+' call aa rahi hai - Accept karu?');
-    if(!accept){ call.close(); return; }
-    try{
-      localStream=await navigator.mediaDevices.getUserMedia({video: call.metadata.isVideo?{facingMode:'user'}:false, audio:true});
-      document.getElementById('localVideoSmall').srcObject=localStream;
-      call.answer(localStream);
-      handleCall(call, call.metadata.isVideo);
-    }catch(e){ alert('Camera/mic permission do'); }
+    if(!confirm(call.metadata?.name+' call kar raha hai?')) return;
+    const stream = await navigator.mediaDevices.getUserMedia({video:call.metadata.type==='video', audio:true});
+    document.getElementById('localVideo').srcObject=stream;
+    document.getElementById('videoModal').style.display='flex';
+    call.answer(stream);
+    call.on('stream', s=>document.getElementById('remoteVideo').srcObject=s);
+    currentCall=call;
   });
 }
-async function startCall(isVideo){
-  const num=document.getElementById('callNumber').value.trim();
-  if(!num || num.length<10){ alert('Sahi number daalo'); return; }
-  if(num===myNumber){ alert('Khud ko call nahi kar sakte'); return; }
-  try{
-    localStream=await navigator.mediaDevices.getUserMedia({video:isVideo?{facingMode:'user'}:false, audio:true});
-    document.getElementById('localVideoSmall').srcObject=localStream;
-    const call=peer.call('dost-'+num, localStream, {metadata:{from:myNumber, isVideo}});
-    handleCall(call,isVideo);
-  }catch(e){ alert('Camera/mic permission chahiye - '+e.message); }
-}
-function handleCall(call,isVideo){
-  currentCall=call;
-  document.getElementById('callOverlay').classList.add('active');
-  document.getElementById('callPeer').innerText=call.peer.replace('dost-','')+' • '+(isVideo?'Video':'Voice');
-  document.getElementById('callStatus').innerText='Connecting...';
-  document.getElementById('remoteVideo').style.display=isVideo?'block':'none';
-  document.getElementById('localVideo').style.display=isVideo?'none':'block';
-  if(!isVideo) document.getElementById('localVideo').srcObject=localStream;
 
-  call.on('stream', remoteStream=>{
-    document.getElementById('callStatus').innerText='Connected • '+(isVideo?'Video':'Voice');
-    if(isVideo) document.getElementById('remoteVideo').srcObject=remoteStream;
-    else document.getElementById('localVideo').srcObject=remoteStream;
+window.doLogin = ()=>{
+  const name=document.getElementById('lName').value.trim();
+  const num=document.getElementById('lNum').value.trim();
+  const age=document.getElementById('lAge').value.trim()||'22';
+  const bio=document.getElementById('lBio').value.trim()||'Hi Dost!';
+  if(!name||!num) return alert('Naam number daalo');
+  myProfile={name,num,age,bio,photo:localStorage.getItem('dost_3final_photo')||`https://i.pravatar.cc/300?u=${num}`,time:Date.now(),online:true};
+  const f=document.getElementById('lPhoto').files[0];
+  if(f){
+    const r=new FileReader();
+    r.onload=e=>{ myProfile.photo=e.target.result; localStorage.setItem('dost_3final_photo', e.target.result); save(); };
+    r.readAsDataURL(f);
+  } else save();
+}
+function save(){
+  localStorage.setItem('dost_3final', JSON.stringify(myProfile));
+  document.getElementById('loginPage').style.display='none';
+  start();
+}
+function start(){
+  if(!myProfile) return;
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('meImg').src=myProfile.photo;
+  document.getElementById('topMeImg').src=myProfile.photo;
+  document.getElementById('meName').innerText=myProfile.name+', '+myProfile.age;
+  document.getElementById('meNum').innerText=myProfile.num;
+  document.getElementById('meBio').innerText=myProfile.bio||'';
+  document.getElementById('editName').value=myProfile.name;
+  document.getElementById('editAge').value=myProfile.age;
+  document.getElementById('editBio').value=myProfile.bio||'';
+  initPeer(myProfile.num);
+  initGun();
+  setInterval(pushUser, 20000);
+  setTimeout(pushUser, 500);
+}
+
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderOnline(){
+  const list = Object.values(allUsers).filter(u=>u.num!==myProfile?.num);
+  list.sort((a,b)=>(b.time||0)-(a.time||0));
+  const grid=document.getElementById('onlineGrid');
+  grid.innerHTML='';
+  list.forEach(p=>{
+    const isOnline = Date.now() - (p.time||0) < 60000;
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <img src="${p.photo}" onerror="this.src='https://i.pravatar.cc/300?u=${p.num}'">
+      <div class="actions">
+        <button class="ibtn voice-btn">📞</button>
+        <button class="ibtn video-btn">📹</button>
+      </div>
+      <div class="overlay">
+        <div class="name"><span class="dot" style="background:${isOnline?'#22c55e':'#666'}"></span> ${escapeHtml(p.name)}</div>
+      </div>`;
+    // Hardened: no inline onclick with JSON, use closures
+    card.addEventListener('click', ()=> openDetail(p.num));
+    card.querySelector('.voice-btn').addEventListener('click', (e)=>{ e.stopPropagation(); callUser(p.num,'voice'); });
+    card.querySelector('.video-btn').addEventListener('click', (e)=>{ e.stopPropagation(); callUser(p.num,'video'); });
+    grid.appendChild(card);
   });
-  call.on('close', ()=>endCall());
-  call.on('error', ()=>endCall());
+  if(list.length===0){
+    grid.innerHTML='<div style="grid-column:1/-1;padding:30px;text-align:center;color:#666">Koi nahi — dusre phone se alag number se login karo</div>';
+  }
+  document.getElementById('msgCount').innerText=list.filter(u=>Date.now()-u.time<60000).length+' online';
 }
-function endCall(){
-  if(currentCall) currentCall.close();
-  if(localStream) localStream.getTracks().forEach(t=>t.stop());
-  document.getElementById('callOverlay').classList.remove('active');
-  currentCall=null; localStream=null;
+
+function renderMsgsList(){
+  const list = Object.values(allUsers).filter(u=>u.num!==myProfile?.num);
+  list.sort((a,b)=>(b.time||0)-(a.time||0));
+  const container=document.getElementById('msgsList');
+  container.innerHTML='';
+  list.forEach(p=>{
+    const isOnline = Date.now() - (p.time||0) < 60000;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:10px;padding:12px;background:#1a1a1a;border-radius:14px;margin:6px 0;border:1px solid #222;cursor:pointer';
+    row.innerHTML=`
+      <img src="${p.photo}" style="width:44px;height:44px;border-radius:50%;object-fit:cover">
+      <div style="flex:1"><div style="font-weight:700">${escapeHtml(p.name)}</div><div style="font-size:11px;color:${isOnline?'#22c55e':'#888'}">${isOnline?'● Online':'○ Offline'}</div></div>
+      <div style="display:flex;gap:6px"><button class="ibtn v">📞</button><button class="ibtn vd">📹</button></div>`;
+    row.addEventListener('click', ()=> openChat(p.num));
+    row.querySelector('.v').addEventListener('click', (e)=>{ e.stopPropagation(); callUser(p.num,'voice'); });
+    row.querySelector('.vd').addEventListener('click', (e)=>{ e.stopPropagation(); callUser(p.num,'video'); });
+    container.appendChild(row);
+  });
 }
-function toggleMute(){
-  if(!localStream) return;
-  isMuted=!isMuted;
-  localStream.getAudioTracks().forEach(t=>t.enabled=!isMuted);
-  document.getElementById('muteBtn').innerText=isMuted?'🔇':'🎙️';
+
+window.openDetail = (num)=>{
+  const user = Object.values(allUsers).find(u=>u.num===num);
+  if(!user) return;
+  detailUser=user;
+  const isOnline = Date.now() - (user.time||0) < 60000;
+  document.getElementById('detailImg').src=user.photo;
+  document.getElementById('detailName').innerText=user.name+', '+(user.age||'');
+  document.getElementById('detailMeta').innerText=(isOnline?'🟢 Online':'⚪ Offline')+' • '+(user.num||'');
+  document.getElementById('detailBio').innerText=user.bio||'No bio';
+  const msgBtn=document.getElementById('detailMsgBtn');
+  msgBtn.disabled=!isOnline;
+  msgBtn.style.opacity=isOnline?'1':'0.4';
+  msgBtn.innerText=isOnline?'💬 Message Karo':'Offline - Message band';
+  msgBtn.onclick=()=>{ if(isOnline) { closeDetail(); openChat(user.num); } };
+  document.getElementById('detailVoiceBtn').onclick=()=>callUser(user.num,'voice');
+  document.getElementById('detailVideoBtn').onclick=()=>callUser(user.num,'video');
+  document.getElementById('detailWindow').style.display='flex';
 }
-function toggleCam(){
-  if(!localStream) return;
-  isCamOff=!isCamOff;
-  localStream.getVideoTracks().forEach(t=>t.enabled=!isCamOff);
-  document.getElementById('camBtn').innerText=isCamOff?'🚫':'📹';
+window.closeDetail = ()=>{ document.getElementById('detailWindow').style.display='none'; detailUser=null; }
+
+window.openChat = (num)=>{
+  const user = Object.values(allUsers).find(u=>u.num===num);
+  if(!user) return;
+  const isOnline = Date.now() - (user.time||0) < 60000;
+  if(!isOnline){ alert('User offline hai - online hone par message kar sakte ho'); return; }
+  currentChatUser=user;
+  document.getElementById('chatWindow').style.display='flex';
+  document.getElementById('chatName').innerText=user.name;
+  document.getElementById('chatImg').src=user.photo;
+  document.getElementById('chatStatus').innerText='🟢 Online';
+  document.getElementById('chatStatus').style.color='#22c55e';
+  document.getElementById('chatMsgs').innerHTML='';
+  gunRoom.get('chats').get(getChatId(myProfile.num, user.num)).map().once((msg)=>{ if(msg) addMsgToUI(msg); });
 }
-init();
+window.closeChat = ()=>{ document.getElementById('chatWindow').style.display='none'; currentChatUser=null; }
+function getChatId(a,b){ return [a,b].sort().join('_'); }
+function addMsgToUI(msg){
+  if(!msg || !msg.text) return;
+  const div=document.createElement('div');
+  div.className='msg '+(msg.from===myProfile.num?'me':'other');
+  div.innerText=msg.text;
+  document.getElementById('chatMsgs').appendChild(div);
+  document.getElementById('chatMsgs').scrollTop=99999;
+}
+window.sendMsg = ()=>{
+  const text=document.getElementById('chatInput').value.trim();
+  if(!text || !currentChatUser) return;
+  const isOnline = Date.now() - (currentChatUser.time||0) < 60000;
+  if(!isOnline) return alert('User offline ho gaya');
+  const msg={from:myProfile.num,to:currentChatUser.num,text,time:Date.now()};
+  gunRoom.get('chats').get(getChatId(myProfile.num, currentChatUser.num)).get(Date.now().toString()).put(msg);
+  document.getElementById('chatInput').value='';
+  addMsgToUI(msg);
+}
+window.showTab = (t)=>{
+  document.getElementById('onlinePage').style.display=t==='online'?'block':'none';
+  document.getElementById('msgsPage').style.display=t==='msgs'?'block':'none';
+  document.getElementById('profilePage').style.display=t==='profile'?'block':'none';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+}
+window.callUser = async (num,type)=>{
+  const stream = await navigator.mediaDevices.getUserMedia({video:type==='video', audio:true}).catch(()=>{alert('Camera allow karo'); throw '';});
+  document.getElementById('localVideo').srcObject=stream;
+  document.getElementById('videoModal').style.display='flex';
+  const call=peer.call('dost-'+num, stream, {metadata:{name:myProfile.name,type}});
+  call.on('stream', s=>document.getElementById('remoteVideo').srcObject=s);
+  call.on('close', ()=>document.getElementById('videoModal').style.display='none');
+  currentCall=call;
+}
+window.chatVoiceCall = ()=>{ if(currentChatUser) callUser(currentChatUser.num,'voice'); }
+window.chatVideoCall = ()=>{ if(currentChatUser) callUser(currentChatUser.num,'video'); }
+window.endCall=()=>{ if(currentCall) currentCall.close(); document.getElementById('videoModal').style.display='none'; }
+window.saveProfile=()=>{
+  myProfile.name=document.getElementById('editName').value||myProfile.name;
+  myProfile.age=document.getElementById('editAge').value||myProfile.age;
+  myProfile.bio=document.getElementById('editBio').value||myProfile.bio||'';
+  const f=document.getElementById('editPhoto').files[0];
+  if(f){
+    const r=new FileReader();
+    r.onload=e=>{ myProfile.photo=e.target.result; localStorage.setItem('dost_3final_photo', e.target.result); finishSave(); };
+    r.readAsDataURL(f);
+  } else finishSave();
+}
+function finishSave(){
+  localStorage.setItem('dost_3final', JSON.stringify(myProfile));
+  document.getElementById('meImg').src=myProfile.photo;
+  document.getElementById('topMeImg').src=myProfile.photo;
+  document.getElementById('meName').innerText=myProfile.name+', '+myProfile.age;
+  document.getElementById('meBio').innerText=myProfile.bio;
+  pushUser();
+  alert('Profile save ho gaya - bio ab sabko dikhega');
+}
+window.logout=()=>{ if(gunRoom) gunRoom.get('users').get('user_'+myProfile.num).put({num:myProfile.num,time:0}); localStorage.clear(); location.reload(); }
+
+if(myProfile) start();
 </script>
 </body>
 </html>
