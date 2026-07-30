@@ -153,6 +153,20 @@
             height: 100%;
             object-fit: cover;
         }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -163,9 +177,9 @@
             <h1 style="font-size:32px;margin-top:20px;">BLUE NIGHT</h1>
             <p class="text-gray" style="margin-top:8px;">Real People, Real Connections</p>
             <div style="margin-top:40px;display:flex;gap:8px;justify-content:center;">
-                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;"></span>
-                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;"></span>
-                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;"></span>
+                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;animation:bounce 1.2s infinite;"></span>
+                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;animation:bounce 1.2s infinite;animation-delay:0.2s;"></span>
+                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;animation:bounce 1.2s infinite;animation-delay:0.4s;"></span>
             </div>
         </div>
 
@@ -175,18 +189,15 @@
             <p id="authSub" class="text-gray mt-2">We verify every number. No fake accounts allowed.</p>
             <div id="errorMsg" class="text-red text-sm mt-2 hidden"></div>
 
-            <!-- Phone Input -->
             <div id="phoneSection">
                 <div class="card flex" style="align-items:center;padding:4px;">
                     <span style="padding:12px 16px;background:#000;border-radius:12px;">+91</span>
-                    <input type="text" id="phoneInput" placeholder="98765 43210" maxlength="10"
-                    style="border:none;background:transparent;margin-top:0;">
+                    <input type="text" id="phoneInput" placeholder="98765 43210" maxlength="10" style="border:none;background:transparent;margin-top:0;">
                 </div>
                 <button class="btn mt-4" id="sendOtpBtn">Send OTP • Real Verification</button>
                 <p class="text-gray text-sm mt-4 text-center">By continuing you agree to real photo policy</p>
             </div>
 
-            <!-- OTP Input -->
             <div id="otpSection" class="hidden">
                 <div class="flex" style="gap:8px;justify-content:center;">
                     <input type="text" maxlength="1" class="otp-box" style="width:46px;text-align:center;font-size:20px;">
@@ -238,7 +249,7 @@
                 <input type="text" id="profileWeight" placeholder="Weight">
             </div>
             <input type="text" id="profileCity" placeholder="City">
-            <textarea id="profileAbout" rows="3" placeholder="About Me (min 20 words)"></textarea>
+            <textarea id="profileAbout" rows="3" placeholder="About Me (min 20 characters)"></textarea>
 
             <div id="interestsContainer" class="flex" style="flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
 
@@ -498,6 +509,7 @@
                     showScreen('home');
                     loadDiscover();
                     loadPending();
+                    updateProfileUI();
                 } else {
                     showScreen('create');
                     updateProfileUI();
@@ -530,19 +542,19 @@
 
         // Profile form inputs
         ['profileName', 'profileDob', 'profileRole', 'profileBody', 'profileHeight', 'profileWeight', 'profileCity',
-            'profileAbout', 'profileAgreed'
+            'profileAbout'
         ].forEach(id => {
             const el = $(id);
             if (!el) return;
             el.addEventListener('input', () => {
                 const key = id.replace('profile', '').toLowerCase();
-                if (id === 'profileAgreed') state.profile.agreed = el.checked;
-                else if (id === 'profileDob') state.profile.dob = el.value;
+                if (id === 'profileDob') state.profile.dob = el.value;
                 else state.profile[key] = el.value;
             });
-            if (id === 'profileAgreed') {
-                el.addEventListener('change', () => state.profile.agreed = el.checked);
-            }
+        });
+
+        $('profileAgreed')?.addEventListener('change', (e) => {
+            state.profile.agreed = e.target.checked;
         });
 
         // Interests
@@ -556,20 +568,24 @@
             }
         });
 
-        $('createProfileBtn')?.addEventListener('click', async () => {
+        // ---- CREATE PROFILE BUTTON ----
+        $('createProfileBtn')?.addEventListener('click', createProfile);
+
+        async function createProfile() {
             const p = state.profile;
             const age = p.dob ? Math.floor((Date.now() - new Date(p.dob).getTime()) / 31557600000) : 0;
 
-            if (!p.photo) { alert('Upload your real photo'); return; }
-            if (p.name.length < 2) { alert('Enter your real name'); return; }
-            if (age < 18) { alert('You must be 18+'); return; }
-            if (!p.role) { alert('Select your role'); return; }
-            if (!p.city) { alert('Enter your city'); return; }
-            if (p.about.length < 20) { alert('About must be at least 20 characters'); return; }
-            if (!p.agreed) { alert('Please agree to the terms'); return; }
+            if (!p.photo) { alert('📸 Upload your real photo first!'); return; }
+            if (p.name.length < 2) { alert('❌ Enter your real name (min 2 characters)'); return; }
+            if (age < 18) { alert('❌ You must be 18+ to join'); return; }
+            if (!p.role) { alert('❌ Please select your role'); return; }
+            if (!p.city || p.city.length < 2) { alert('❌ Please enter your city'); return; }
+            if (p.about.length < 20) { alert('❌ About me must be at least 20 characters'); return; }
+            if (!p.agreed) { alert('❌ Please agree to the terms'); return; }
 
-            $('createProfileBtn').disabled = true;
-            $('createProfileBtn').textContent = 'Creating...';
+            const btn = $('createProfileBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Creating...';
 
             try {
                 // Upload photo
@@ -610,16 +626,20 @@
                     photoURL: photoURL,
                     isReal: false
                 };
-                alert('Profile created! Pending admin verification (24h).');
+
+                alert('✅ Profile Created! Pending admin verification (24h).');
                 showScreen('home');
                 loadDiscover();
                 loadPending();
-            } catch (e) {
-                alert('Error: ' + e.message);
+
+            } catch (error) {
+                console.error(error);
+                alert('❌ Error: ' + error.message);
             }
-            $('createProfileBtn').disabled = false;
-            $('createProfileBtn').textContent = 'Create Profile & Join';
-        });
+
+            btn.disabled = false;
+            btn.textContent = 'Create Profile & Join';
+        }
 
         // ---- LOAD DISCOVER ----
         async function loadDiscover() {
@@ -691,7 +711,6 @@
                 </div>
             `).join('');
 
-            // Approve/Reject buttons
             document.querySelectorAll('.approve-btn').forEach(btn => {
                 btn.addEventListener('click', () => approveUser(btn.dataset.uid));
             });
@@ -774,6 +793,17 @@
                 checkUserProfile(user.uid);
             } else {
                 showScreen('auth');
+            }
+        });
+
+        // ---- KEYBOARD: ENTER on OTP ----
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (!state.showOTP) {
+                    $('sendOtpBtn')?.click();
+                } else {
+                    $('verifyOtpBtn')?.click();
+                }
             }
         });
 
