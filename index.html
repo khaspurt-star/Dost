@@ -1,595 +1,783 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>BLUE NIGHT — Real Dating</title>
-  
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { background: #000; font-family: -apple-system, 'Inter', sans-serif; min-height: 100vh; display: flex; justify-content: center; color: #fff; }
-    #root { width: 100%; max-width: 390px; min-height: 100vh; background: #000; position: relative; overflow: hidden; }
-    ::-webkit-scrollbar { display: none; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
-    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    .animate-fade { animation: fadeIn 0.5s ease-out; }
-    .animate-bounce { animation: bounce 1.2s infinite; }
-    .glass { background: rgba(16,20,31,0.85); backdrop-filter: blur(20px); }
-    .scrollable { overflow-y: auto; scroll-behavior: smooth; }
-    .scrollable::-webkit-scrollbar { display: none; }
-    input, select, textarea { font-family: inherit; }
-    input[type="date"] { color-scheme: dark; }
-    input:focus, select:focus, textarea:focus { outline: none; }
-    @supports (padding: max(0px)) { .safe-top { padding-top: max(12px, env(safe-area-inset-top)); } .safe-bottom { padding-bottom: max(8px, env(safe-area-inset-bottom)); } }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BLUE NIGHT</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #000;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        #app {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .btn {
+            background: #0A84FF;
+            border: none;
+            color: #fff;
+            padding: 14px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #1E293B;
+            background: #10141F;
+            color: #fff;
+            font-size: 15px;
+            margin-top: 6px;
+        }
+        .card {
+            background: #10141F;
+            border: 1px solid #1E293B;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        .flex {
+            display: flex;
+            gap: 10px;
+        }
+        .flex-1 {
+            flex: 1;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-10 {
+            margin-top: 40px;
+        }
+        .mt-6 {
+            margin-top: 24px;
+        }
+        .mt-4 {
+            margin-top: 16px;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .text-white {
+            color: #fff;
+        }
+        .text-gray {
+            color: #8A8FA3;
+            font-size: 14px;
+        }
+        .text-sm {
+            font-size: 12px;
+        }
+        .text-green {
+            color: #00FF88;
+        }
+        .text-blue {
+            color: #0A84FF;
+        }
+        .text-red {
+            color: #ff4444;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+        .tag {
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid #1E293B;
+            font-size: 12px;
+            cursor: pointer;
+            background: #10141F;
+            color: #8A8FA3;
+        }
+        .tag.active {
+            background: #0A84FF;
+            border-color: #0A84FF;
+            color: #fff;
+        }
+        .profile-pic {
+            width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            border: 2px dashed #2A344A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
-  <div id="root"></div>
-
-  <script>
-    // ============================================================
-    // 🔥 FIREBASE CONFIG (Aapka Firebase Config)
-    // ============================================================
-    const firebaseConfig = {
-      apiKey: "AIzaSyDX1H9kO5ttbdd3mD5pu-S8asSGNo--0mk",
-      authDomain: "dil-se-dil-tak-b451d.firebaseapp.com",
-      databaseURL: "https://dil-se-dil-tak-b451d-default-rtdb.firebaseio.com",
-      projectId: "dil-se-dil-tak-b451d",
-      storageBucket: "dil-se-dil-tak-b451d.firebasestorage.app",
-      messagingSenderId: "364423864979",
-      appId: "1:364423864979:web:970c17b2746a0ef3db2366",
-      measurementId: "G-VN2WVQ4VD3"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    // Enable offline persistence
-    db.enablePersistence().catch(() => {});
-
-    // ============================================================
-    // 🚀 STATE
-    // ============================================================
-    let state = {
-      screen: 'splash',
-      phone: '',
-      otp: ['', '', '', '', '', ''],
-      showOTP: false,
-      user: null,
-      userData: null,
-      pendingUsers: [],
-      discoverUsers: [],
-      likedUsers: [],
-      matches: [],
-      messages: [],
-      showCode: false,
-      isLoading: false,
-      error: '',
-      profile: {
-        name: '',
-        dob: '',
-        role: '',
-        body: '',
-        height: '',
-        weight: '',
-        city: '',
-        about: '',
-        interests: [],
-        agreed: false,
-        photo: null
-      },
-      photoData: null,
-      isUploading: false,
-      confirmationResult: null,
-      otpError: '',
-      authUser: null
-    };
-
-    const INTERESTS = ['Gym', 'Travel', 'Music', 'Gaming', 'Art', 'Yoga', 'Reading', 'Coffee', 'Party', 'Movies', 'Beach', 'Dance'];
-
-    // ============================================================
-    // 🔧 DOM HELPERS
-    // ============================================================
-    function $(sel, ctx = document) { return ctx.querySelector(sel); }
-    function $$(sel, ctx = document) { return [...ctx.querySelectorAll(sel)]; }
-
-    function render() {
-      const root = document.getElementById('root');
-      if (!root) return;
-      root.innerHTML = buildApp();
-      attachEvents();
-    }
-
-    // ============================================================
-    // 🎨 ICONS
-    // ============================================================
-    const I = (name, size = 16, cls = '') => {
-      const icons = {
-        Heart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
-        Camera: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`,
-        Check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>`,
-        ChevronDown: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>`,
-        Clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
-        MapPin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-        MessageCircle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>`,
-        Navigation: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>`,
-        RefreshCw: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`,
-        Search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
-        Share2: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>`,
-        ShieldCheck: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>`,
-        Sparkles: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>`,
-        TriangleAlert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`,
-        User: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
-        X: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`,
-        Zap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>`,
-        BadgeCheck: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>`,
-        Image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`
-      };
-      const svg = icons[name] || '';
-      return `<span class="inline-flex ${cls}" style="width:${size}px;height:${size}px;flex-shrink:0;">${svg}</span>`;
-    }
-        // ============================================================
-    // 🏗️ BUILD APP
-    // ============================================================
-    function buildApp() {
-      const s = state;
-      let html = `
-        <div class="relative flex flex-col min-h-screen bg-black overflow-hidden">
-          <div class="safe-top h-[44px] flex items-center justify-between px-6 text-[14px] font-semibold text-white select-none">
-            <span>9:41</span>
-            <div class="flex items-center gap-1.5">
-              <div class="flex gap-0.5 items-end">
-                <div class="w-[3px] h-[3px] bg-white rounded-sm"></div>
-                <div class="w-[3px] h-[5px] bg-white rounded-sm"></div>
-                <div class="w-[3px] h-[8px] bg-white rounded-sm"></div>
-                <div class="w-[3px] h-[10px] bg-white/40 rounded-sm"></div>
-              </div>
-              <div class="ml-1 w-6 h-3 border border-white/40 rounded-[3px] relative">
-                <div class="absolute inset-[2px] bg-white w-[70%] rounded-[1px]"></div>
-                <div class="absolute -right-[3px] top-[3px] w-[2px] h-[4px] bg-white/40 rounded-r-sm"></div>
-              </div>
+    <div id="app">
+        <!-- SPLASH -->
+        <div id="splash" class="text-center mt-10">
+            <h1 style="font-size:40px;">🌙</h1>
+            <h1 style="font-size:32px;margin-top:20px;">BLUE NIGHT</h1>
+            <p class="text-gray" style="margin-top:8px;">Real People, Real Connections</p>
+            <div style="margin-top:40px;display:flex;gap:8px;justify-content:center;">
+                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;"></span>
+                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;"></span>
+                <span style="width:10px;height:10px;background:#0A84FF;border-radius:50%;display:inline-block;"></span>
             </div>
-          </div>
-
-          <div class="flex-1 relative overflow-hidden">
-      `;
-
-      // ---- SPLASH ----
-      if (s.screen === 'splash') {
-        html += `
-          <div class="flex-1 flex flex-col items-center justify-center px-8 animate-fade">
-            <div class="relative">
-              <div class="absolute -inset-10 bg-[#0A84FF] blur-[60px] opacity-20 rounded-full"></div>
-              <div class="relative w-24 h-24 rounded-[24px] bg-[#10141F] border border-[#1E293B] flex items-center justify-center shadow-[0_0_40px_rgba(10,132,255,0.4)]">
-                ${I('Heart', 36, 'text-[#0A84FF]')}
-              </div>
-              <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#00FF88] rounded-full border-2 border-black shadow-[0_0_10px_#00FF88]"></div>
-            </div>
-            <h1 class="mt-8 text-[32px] font-black tracking-[-0.02em] text-white">BLUE NIGHT</h1>
-            <p class="mt-2 text-[13px] tracking-[0.2em] text-[#8A8FA3] uppercase">Real People, Real Connections</p>
-            <div class="mt-10 flex gap-1.5">
-              <span class="w-1.5 h-1.5 bg-[#0A84FF] rounded-full animate-bounce" style="animation-delay:-0.3s"></span>
-              <span class="w-1.5 h-1.5 bg-[#0A84FF] rounded-full animate-bounce" style="animation-delay:-0.15s"></span>
-              <span class="w-1.5 h-1.5 bg-[#0A84FF] rounded-full animate-bounce"></span>
-            </div>
-            <p class="absolute bottom-10 text-[10px] text-[#3A4156] tracking-widest uppercase">No fake profiles • Photo verified</p>
-          </div>
-        `;
-      }
-
-      // ---- AUTH ----
-      else if (s.screen === 'auth') {
-        html += `
-          <div class="flex-1 flex flex-col px-6 pb-8 overflow-y-auto scrollable">
-            <div class="mt-6 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-[#10141F] border border-[#1E293B] flex items-center justify-center">
-                ${I('Heart', 18, 'text-[#0A84FF]')}
-              </div>
-              <span class="text-white font-bold tracking-tight">BLUE NIGHT</span>
-              <span class="ml-auto text-[10px] px-2 py-1 rounded-full bg-[#00FF88]/10 text-[#00FF88] border border-[#00FF88]/20">REAL ONLY</span>
-            </div>
-
-            <h2 class="mt-10 text-[28px] font-bold leading-[0.95] text-white tracking-tight">
-              ${s.showOTP ? 'Enter OTP' : 'Welcome to<br>Real Dating'}
-            </h2>
-            <p class="mt-3 text-[14px] text-[#8A8FA3] leading-snug">
-              ${s.showOTP ? `Code sent to +91 ${s.phone}` : 'We verify every number. No fake accounts allowed.'}
-            </p>
-
-            ${s.error ? `<p class="mt-2 text-[12px] text-red-400">${s.error}</p>` : ''}
-
-            ${!s.showOTP ? `
-              <div class="mt-8 rounded-[16px] bg-[#10141F] border border-[#1E293B] p-1 flex items-center">
-                <div class="px-4 py-3 rounded-[12px] bg-black border border-[#1E293B] text-white text-[15px] font-medium flex items-center gap-2">
-                  <span>🇮🇳</span> +91 ${I('ChevronDown', 14, 'text-[#5A647C]')}
-                </div>
-                <input id="phoneInput" type="text" value="${s.phone}" maxlength="10" placeholder="98765 43210" class="flex-1 bg-transparent px-4 text-white text-[17px] outline-none placeholder:text-[#3A4156]">
-              </div>
-              <div class="mt-4 rounded-xl bg-[#0A84FF]/10 border border-[#0A84FF]/20 p-3 flex gap-2.5">
-                ${I('ShieldCheck', 16, 'text-[#0A84FF] shrink-0 mt-0.5')}
-                <p class="text-[11px] leading-[1.4] text-[#7FA8D6]">Your number is never shown. Used only for OTP & safety.</p>
-              </div>
-              <button id="sendOtpBtn" class="mt-6 w-full h-[52px] rounded-full bg-[#0A84FF] text-white font-semibold text-[15px] shadow-[0_0_30px_rgba(10,132,255,0.4)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
-                ${s.isLoading ? 'Sending...' : 'Send OTP • Real Verification'}
-              </button>
-              <div class="mt-4 text-center">
-                <p class="text-[11px] text-[#3A4156]">By continuing you agree to real photo policy</p>
-              </div>
-              <div class="mt-auto pt-6">
-                <button id="toggleCodeBtn" class="w-full text-[11px] text-[#0A84FF] tracking-wide underline underline-offset-4">
-                  ${s.showCode ? 'Hide' : 'View'} Firebase Phone Auth Code
-                </button>
-                ${s.showCode ? `
-                  <pre class="mt-3 p-3 rounded-xl bg-[#0B0F19] border border-[#1E293B] text-[10px] leading-[1.4] text-[#7AA0C8] overflow-x-auto whitespace-pre-wrap">// REAL PHONE AUTH
-const verifier = new RecaptchaVerifier(auth, 'recaptcha-container', {size: 'invisible'});
-const conf = await signInWithPhoneNumber(auth, '+91'+phone, verifier);
-const result = await conf.confirm(otp);</pre>
-                ` : ''}
-              </div>
-            ` : `
-              <div class="mt-8 flex gap-2 justify-between">
-                ${[0,1,2,3,4,5].map(i => `
-                  <input type="text" class="otp-input w-[46px] h-[52px] rounded-xl bg-[#10141F] border border-[#1E293B] text-center text-white text-[18px] font-bold outline-none focus:border-[#0A84FF] focus:shadow-[0_0_0_3px_rgba(10,132,255,0.2)]" maxlength="1" data-index="${i}" value="${s.otp[i] || ''}">
-                `).join('')}
-              </div>
-              <button id="verifyOtpBtn" class="mt-8 w-full h-[52px] rounded-full bg-[#0A84FF] text-white font-semibold shadow-[0_0_30px_rgba(10,132,255,0.4)] active:scale-[0.98] transition-all">
-                ${s.isLoading ? 'Verifying...' : 'Verify & Continue'}
-              </button>
-              <button id="changePhoneBtn" class="mt-3 w-full text-[13px] text-[#5A647C]">Change number</button>
-            `}
-          </div>
-        `;
-      }
-
-      // ---- CREATE PROFILE ----
-      else if (s.screen === 'create') {
-        const p = s.profile;
-        const age = p.dob ? Math.floor((Date.now() - new Date(p.dob).getTime()) / 31557600000) : 0;
-        const isValid = p.photo && p.name.length >= 2 && age >= 18 && p.role && p.city && p.about.length >= 20 && p.agreed;
-
-        html += `
-          <div class="flex-1 flex flex-col overflow-y-auto scrollable px-6 pb-24">
-            <div class="mx-0 mt-3 mb-1 flex items-center gap-2 rounded-full bg-[#10141F] border border-[#1E293B] px-3 py-2">
-              <div class="h-5 w-5 rounded-full bg-[#0A84FF]/20 flex items-center justify-center shrink-0">
-                ${I('ShieldCheck', 12, 'text-[#0A84FF]')}
-              </div>
-              <p class="text-[10px] leading-[1.2] text-[#8A8FA3] tracking-wide">
-                <span class="text-white font-semibold">BLUE NIGHT PROMISE:</span> No Bots, No Fakes, 100% Real
-              </p>
-            </div>
-
-            <h2 class="text-[24px] font-bold text-white tracking-tight mt-4">Create Real Profile</h2>
-            <p class="mt-1 text-[12px] text-[#00FF88] flex items-center gap-1.5">
-              ${I('BadgeCheck', 12, 'text-[#00FF88]')} Selfie verification required • No filters
-            </p>
-
-            <div class="mt-7 flex flex-col items-center">
-              <div class="relative">
-                <div class="absolute -inset-4 bg-[#0A84FF] blur-[30px] opacity-20 rounded-full"></div>
-                <label class="relative w-[128px] h-[128px] rounded-full bg-[#10141F] border-2 border-dashed border-[#2A344A] flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-[#0A84FF]/50 transition-colors">
-                  ${p.photo ? `<img src="${p.photo}" class="w-full h-full object-cover">` : `
-                    ${I('Camera', 28, 'text-[#3A4156] group-hover:text-[#0A84FF]')}
-                    <span class="mt-2 text-[10px] tracking-widest text-[#5A647C] uppercase">Real Photo</span>
-                  `}
-                  <input type="file" id="photoInput" accept="image/*" capture="user" class="hidden">
-                </label>
-                <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#0A84FF] border-[3px] border-black flex items-center justify-center shadow-[0_0_15px_#0A84FF]">
-                  ${I('Camera', 14, 'text-white')}
-                </div>
-              </div>
-              <p class="mt-3 text-[11px] text-[#8A8FA3] text-center max-w-[240px]">Upload your REAL photo, no filters. <5MB.</p>
-              ${s.isUploading ? `<p class="mt-2 text-[11px] text-[#0A84FF]">Uploading...</p>` : ''}
-            </div>
-
-            <div class="mt-8 space-y-4">
-              <div>
-                <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">Full Name (Real)</label>
-                <input id="profileName" value="${p.name}" placeholder="Your real name" class="mt-2 w-full h-[48px] rounded-xl bg-[#10141F] border border-[#1E293B] px-4 text-white outline-none focus:border-[#0A84FF] placeholder:text-[#3A4156]">
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">DOB (18+)</label>
-                  <input type="date" id="profileDob" value="${p.dob}" class="mt-2 w-full h-[48px] rounded-xl bg-[#10141F] border border-[#1E293B] px-4 text-white outline-none focus:border-[#0A84FF] [color-scheme:dark]">
-                  ${p.dob && age < 18 ? `<p class="mt-1 text-[10px] text-red-400">Must be 18+</p>` : ''}
-                </div>
-                <div>
-                  <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">Role *</label>
-                  <div class="mt-2 relative">
-                    <select id="profileRole" class="w-full h-[48px] rounded-xl bg-[#10141F] border border-[#1E293B] px-4 text-white outline-none appearance-none focus:border-[#0A84FF]">
-                      <option value="">Select</option>
-                      ${['Top','Bottom','Versatile','Vers Top','Vers Bottom','Side'].map(r => `<option value="${r}" ${p.role===r?'selected':''}>${r}</option>`).join('')}
-                    </select>
-                    ${I('ChevronDown', 16, 'absolute right-3 top-[16px] text-[#5A647C] pointer-events-none')}
-                  </div>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-3 gap-3">
-                <div>
-                  <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">Body</label>
-                  <select id="profileBody" class="mt-2 w-full h-[44px] rounded-xl bg-[#10141F] border border-[#1E293B] px-3 text-white text-[13px] outline-none">
-                    <option value="">Type</option>
-                    ${['Slim','Average','Athletic','Muscular','Large'].map(r => `<option value="${r}" ${p.body===r?'selected':''}>${r}</option>`).join('')}
-                  </select>
-                </div>
-                <div>
-                  <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">Height</label>
-                  <input id="profileHeight" value="${p.height}" placeholder="5'11" class="mt-2 w-full h-[44px] rounded-xl bg-[#10141F] border border-[#1E293B] px-3 text-white text-[13px] outline-none">
-                </div>
-                <div>
-                  <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">Weight</label>
-                  <input id="profileWeight" value="${p.weight}" placeholder="75 kg" class="mt-2 w-full h-[44px] rounded-xl bg-[#10141F] border border-[#1E293B] px-3 text-white text-[13px] outline-none">
-                </div>
-              </div>
-
-              <div>
-                <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">City</label>
-                <div class="mt-2 flex gap-2">
-                  <input id="profileCity" value="${p.city}" placeholder="Mumbai, Delhi..." class="flex-1 h-[48px] rounded-xl bg-[#10141F] border border-[#1E293B] px-4 text-white outline-none focus:border-[#0A84FF] placeholder:text-[#3A4156]">
-                  <button id="gpsBtn" class="h-[48px] px-4 rounded-xl bg-[#0A84FF]/10 border border-[#0A84FF]/20 text-[#0A84FF] flex items-center gap-1.5 text-[13px]">
-                    ${I('Navigation', 14)} GPS
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">About Me (min 20)</label>
-                <textarea id="profileAbout" rows="3" placeholder="Real intro, what you seek..." class="mt-2 w-full rounded-xl bg-[#10141F] border border-[#1E293B] p-4 text-white text-[14px] outline-none focus:border-[#0A84FF] placeholder:text-[#3A4156] resize-none">${p.about}</textarea>
-                <p class="mt-1 text-right text-[10px] text-[#5A647C]">${p.about.length}/20 min</p>
-              </div>
-
-              <div>
-                <label class="text-[11px] tracking-widest uppercase text-[#5A647C]">Interests</label>
-                <div class="mt-2 flex flex-wrap gap-2">
-                  ${INTERESTS.map(interest => {
-                    const selected = p.interests.includes(interest);
-                    return `<button class="interest-btn px-3.5 py-2 rounded-full text-[12px] border transition-all ${selected ? 'bg-[#0A84FF] border-[#0A84FF] text-white shadow-[0_0_12px_rgba(10,132,255,0.4)]' : 'bg-[#10141F] border-[#1E293B] text-[#8A8FA3]'}" data-interest="${interest}">${interest}</button>`;
-                  }).join('')}
-                </div>
-              </div>
-
-              <label class="flex gap-3 items-start mt-6 p-3 rounded-xl bg-[#10141F] border border-[#1E293B]">
-                <input type="checkbox" id="profileAgreed" ${p.agreed ? 'checked' : ''} class="mt-0.5 w-4 h-4 rounded accent-[#0A84FF]">
-                <span class="text-[11px] leading-[1.4] text-[#8A8FA3]">I confirm this is my real photo and info. I understand fake profiles are banned permanently.</span>
-              </label>
-            </div>
-
-            <button id="createProfileBtn" class="mt-8 w-full h-[56px] rounded-full ${isValid ? 'bg-[#0A84FF] shadow-[0_0_40px_rgba(10,132,255,0.5)]' : 'bg-[#3A4156] cursor-not-allowed'} text-white font-bold text-[15px] tracking-wide active:scale-[0.98] transition-all">
-              ${s.isLoading ? 'Creating...' : 'Create Profile & Join Real Community'}
-            </button>
-          </div>
-        `;
-      }
-
-      // ---- HOME ----
-      else if (s.screen === 'home') {
-        const users = state.discoverUsers || [];
-        html += `
-          <div class="flex-1 flex flex-col overflow-hidden">
-            <div class="mx-4 mt-3 mb-1 flex items-center gap-2 rounded-full bg-[#10141F] border border-[#1E293B] px-3 py-2">
-              <div class="h-5 w-5 rounded-full bg-[#0A84FF]/20 flex items-center justify-center shrink-0">
-                ${I('ShieldCheck', 12, 'text-[#0A84FF]')}
-              </div>
-              <p class="text-[10px] leading-[1.2] text-[#8A8FA3] tracking-wide">
-                <span class="text-white font-semibold">BLUE NIGHT PROMISE:</span> No Bots, No Fakes, 100% Real
-              </p>
-            </div>
-
-            <div class="px-4 pt-3 pb-2 flex items-center gap-3">
-              <div class="flex-1 h-[40px] rounded-full bg-[#10141F] border border-[#1E293B] flex items-center px-4 gap-2">
-                ${I('Search', 16, 'text-[#5A647C]')}
-                <input placeholder="Search real people nearby..." class="flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-[#5A647C]">
-              </div>
-              <div class="w-10 h-10 rounded-full bg-[#10141F] border border-[#1E293B] flex items-center justify-center">
-                <div class="w-2 h-2 bg-[#00FF88] rounded-full shadow-[0_0_8px_#00FF88]"></div>
-              </div>
-            </div>
-
-            <div class="flex-1 overflow-y-auto px-4 pb-24">
-              ${users.length === 0 ? `
-                <div class="mt-12 flex flex-col items-center text-center">
-                  <div class="relative w-[160px] h-[160px]">
-                    <div class="absolute inset-0 bg-[#0A84FF] blur-[50px] opacity-[0.15] rounded-full"></div>
-                    <div class="absolute inset-0 rounded-[32px] bg-[#10141F] border border-[#1E293B] flex items-center justify-center">
-                      <div class="relative">
-                        <div class="w-20 h-20 rounded-full bg-[#0B0F19] border border-[#1E293B] flex items-center justify-center">
-                          <span class="text-[36px]">🌙</span>
-                        </div>
-                        <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#10141F] border border-[#1E293B] flex items-center justify-center">
-                          ${I('Sparkles', 12, 'text-[#0A84FF]')}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <h3 class="mt-8 text-[22px] font-bold text-white tracking-tight">You're Early! 🌙</h3>
-                  <p class="mt-3 text-[14px] leading-[1.5] text-[#8A8FA3] max-w-[280px]">No other real members near you yet. Every profile you see will be 100% real and verified.</p>
-                  <button id="shareBtn" class="mt-6 w-full max-w-[300px] h-[44px] rounded-full bg-[#0A84FF] text-white text-[13px] font-semibold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(10,132,255,0.4)]">
-                    ${I('Share2', 14)} Invite Friends
-                  </button>
-                </div>
-              ` : `
-                <div class="mt-4 grid grid-cols-3 gap-2">
-                  ${users.map(user => `
-                    <div class="rounded-[14px] bg-[#10141F] border border-[#1E293B] overflow-hidden">
-                      <div class="aspect-[3/4] relative">
-                        <img src="${user.photoURL || user.photo}" class="w-full h-full object-cover">
-                        <div class="absolute top-1.5 left-1.5 w-2 h-2 bg-[#00FF88] rounded-full border border-black shadow-[0_0_6px_#00FF88]"></div>
-                        <div class="absolute bottom-1 left-1 right-1">
-                          <p class="text-[11px] font-semibold text-white truncate">${user.name} • ${user.age || '?'}</p>
-                        </div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-              `}
-            </div>
-          </div>
-        `;
-      }
-
-      // ---- PROFILE ----
-      else if (s.screen === 'profile') {
-        const u = state.userData || {};
-        html += `
-          <div class="flex-1 overflow-y-auto px-6 pb-24 pt-4">
-            <div class="flex items-center gap-4">
-              <div class="relative">
-                <div class="w-[84px] h-[84px] rounded-full overflow-hidden bg-[#10141F] border-2 border-[#1E293B]">
-                  ${u.photoURL ? `<img src="${u.photoURL}" class="w-full h-full object-cover">` : `
-                    <div class="w-full h-full flex items-center justify-center">${I('Image', 28, 'text-[#3A4156]')}</div>
-                  `}
-                </div>
-                <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#FBBF24] border-2 border-black flex items-center justify-center">
-                  ${I('Clock', 10, 'text-black')}
-                </div>
-              </div>
-              <div>
-                <h2 class="text-[20px] font-bold text-white">${u.name || 'Your Profile'}</h2>
-                <p class="text-[13px] text-[#8A8FA3]">${u.age || '?'} • ${u.role || ''} • ${u.city || ''}</p>
-                <p class="mt-1 text-[11px] text-[#5A647C] line-clamp-2">${u.about || 'Your real about will show here...'}</p>
-              </div>
-            </div>
-
-            <div class="mt-6 grid grid-cols-3 gap-3">
-              <div class="rounded-[14px] bg-[#10141F] border border-[#1E293B] p-3 text-center">
-                <p class="text-[20px] font-bold text-white">0</p>
-                <p class="text-[10px] tracking-widest uppercase text-[#5A647C]">Likes</p>
-              </div>
-              <div class="rounded-[14px] bg-[#10141F] border border-[#1E293B] p-3 text-center">
-                <p class="text-[20px] font-bold text-white">0</p>
-                <p class="text-[10px] tracking-widest uppercase text-[#5A647C]">Matches</p>
-              </div>
-              <div class="rounded-[14px] bg-[#10141F] border border-[#1E293B] p-3 text-center">
-                <p class="text-[20px] font-bold text-white">0</p>
-                <p class="text-[10px] tracking-widest uppercase text-[#5A647C]">Visitors</p>
-              </div>
-            </div>
-
-            <button id="logoutBtn" class="mt-8 w-full h-[48px] rounded-xl bg-[#10141F] border border-red-900/30 text-red-400 text-[14px] flex items-center justify-center">
-              ${I('TriangleAlert', 16)} Sign Out
-            </button>
-
-            <div class="mt-6 text-center">
-              <p class="text-[10px] text-[#3A4156]">BLUE NIGHT • No fake profiles since 2024</p>
-              <button id="adminLinkBtn" class="mt-2 text-[11px] text-[#0A84FF] underline">Go to Admin Queue →</button>
-            </div>
-          </div>
-        `;
-      }
-
-      // ---- ADMIN ----
-      else if (s.screen === 'admin') {
-        const pending = state.pendingUsers || [];
-        html += `
-          <div class="flex-1 overflow-y-auto px-6 pb-24 pt-4">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-[#0A84FF] flex items-center justify-center">
-                ${I('ShieldCheck', 18, 'text-white')}
-              </div>
-              <div>
-                <h2 class="text-[18px] font-bold text-white">Admin • Verification</h2>
-                <p class="text-[11px] text-[#5A647C]">Approve only 100% real profiles</p>
-              </div>
-              <button id="adminBackBtn" class="ml-auto w-8 h-8 rounded-full bg-[#10141F] border border-[#1E293B] flex items-center justify-center">
-                ${I('X', 14, 'text-white')}
-              </button>
-            </div>
-
-            ${pending.length === 0 ? `
-              <div class="mt-6 rounded-[16px] bg-[#10141F] border border-[#1E293B] p-8 text-center">
-                <div class="w-12 h-12 mx-auto rounded-full bg-[#0B0F19] border border-[#1E293B] flex items-center justify-center">
-                  ${I('Check', 18, 'text-[#3A4156]')}
-                </div>
-                <p class="mt-4 text-[14px] font-medium text-white">Queue Empty</p>
-                <p class="mt-1 text-[12px] text-[#5A647C]">No pending real verifications.</p>
-              </div>
-            ` : `
-              <div class="mt-6 space-y-3">
-                ${pending.map(user => `
-                  <div class="rounded-[16px] bg-[#10141F] border border-[#1E293B] overflow-hidden">
-                    <div class="p-4 flex gap-3">
-                      <img src="${user.photoURL}" class="w-20 h-20 rounded-xl object-cover bg-[#0B0F19]">
-                      <div class="flex-1 min-w-0">
-                        <p class="text-[15px] font-semibold text-white truncate">${user.name} • ${user.age} • ${user.role}</p>
-                        <p class="text-[11px] text-[#8A8FA3] mt-0.5">${user.city} • Pending</p>
-                        <p class="text-[11px] text-[#5A647C] mt-1 line-clamp-2">${user.about}</p>
-                      </div>
-                    </div>
-                    <div class="grid grid-cols-2 border-t border-[#1E293B]">
-                      <button class="approve-btn h-[44px] bg-[#00FF88]/10 text-[#00FF88] text-[13px] font-semibold flex items-center justify-center gap-1.5" data-uid="${user.uid}">
-                        ${I('Check', 14)} Approve Real
-                      </button>
-                      <button class="reject-btn h-[44px] bg-red-500/10 text-red-400 text-[13px] font-semibold border-l border-[#1E293B] flex items-center justify-center gap-1.5" data-uid="${user.uid}">
-                        ${I('X', 14)} Reject Fake
-                      </button>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            `}
-          </div>
-        `;
-      }
-
-      // ---- BOTTOM NAV ----
-      if (['home', 'likes', 'chat', 'profile'].includes(s.screen)) {
-        html += `
-          <div class="absolute bottom-0 left-0 right-0 h-[84px] bg-black/95 backdrop-blur-xl border-t border-[#10141F] flex items-center justify-around px-2 pb-5 safe-bottom">
-            ${[
-              {id: 'home', icon: 'Search', label: 'Discover'},
-              {id: 'likes', icon: 'Heart', label: 'Likes'},
-              {id: 'chat', icon: 'MessageCircle', label: 'Chat'},
-              {id: 'profile', icon: 'User', label: 'Profile'}
-            ].map(item => {
-              const active = s.screen === item.id;
-              return `<button class="nav-btn flex flex-col items-center gap-1 min-w-[60px]" data-screen="${item.id}">
-                <div class="w-7 h-7 rounded-full flex items-center justify-center transition-all ${active ? 'bg-[#0A84FF] shadow-[0_0_15px_rgba(10,132,255,0.5)]' : 'bg-transparent'}">
-                  ${I(item.icon, 16, active ? 'text-white' : 'text-[#5A647C]')}
-                </div>
-                <span class="text-[10px] tracking-wide ${active ? 'text-white font-semibold' : 'text-[#5A647C]'}">${item.label}</span>
-              </button>`;
-            }).join('')}
-          </div>
-        `;
-      }
-
-      html += `
-          </div>
         </div>
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
-          * { font-family: 'Inter', -apple-system, sans-serif; }
-          .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-        </style>
-      `;
 
-      return html;
-    }
+        <!-- AUTH -->
+        <div id="auth" class="hidden">
+            <h2 id="authTitle" style="font-size:28px;">Welcome to<br>Real Dating</h2>
+            <p id="authSub" class="text-gray mt-2">We verify every number. No fake accounts allowed.</p>
+            <div id="errorMsg" class="text-red text-sm mt-2 hidden"></div>
 
-    // ============================================================
-    // 📌 EVENT LISTENERS
-    // ============================================================
-    function attachEvents() {
-      // ---- SPLASH -> AUTH ----
-      if (state.screen === 'splash') {
+            <!-- Phone Input -->
+            <div id="phoneSection">
+                <div class="card flex" style="align-items:center;padding:4px;">
+                    <span style="padding:12px 16px;background:#000;border-radius:12px;">+91</span>
+                    <input type="text" id="phoneInput" placeholder="98765 43210" maxlength="10"
+                    style="border:none;background:transparent;margin-top:0;">
+                </div>
+                <button class="btn mt-4" id="sendOtpBtn">Send OTP • Real Verification</button>
+                <p class="text-gray text-sm mt-4 text-center">By continuing you agree to real photo policy</p>
+            </div>
+
+            <!-- OTP Input -->
+            <div id="otpSection" class="hidden">
+                <div class="flex" style="gap:8px;justify-content:center;">
+                    <input type="text" maxlength="1" class="otp-box" style="width:46px;text-align:center;font-size:20px;">
+                    <input type="text" maxlength="1" class="otp-box" style="width:46px;text-align:center;font-size:20px;">
+                    <input type="text" maxlength="1" class="otp-box" style="width:46px;text-align:center;font-size:20px;">
+                    <input type="text" maxlength="1" class="otp-box" style="width:46px;text-align:center;font-size:20px;">
+                    <input type="text" maxlength="1" class="otp-box" style="width:46px;text-align:center;font-size:20px;">
+                    <input type="text" maxlength="1" class="otp-box" style="width:46px;text-align:center;font-size:20px;">
+                </div>
+                <button class="btn mt-4" id="verifyOtpBtn">Verify & Continue</button>
+                <button id="changePhoneBtn" class="text-gray text-sm mt-4" style="background:none;border:none;width:100%;cursor:pointer;">Change number</button>
+            </div>
+        </div>
+
+        <!-- CREATE PROFILE -->
+        <div id="create" class="hidden">
+            <h2 style="font-size:24px;">Create Real Profile</h2>
+            <p class="text-green text-sm">✅ Selfie verification required • No filters</p>
+
+            <div class="mt-4">
+                <div class="profile-pic" id="photoUpload">
+                    <span id="photoPlaceholder">📷<br><span style="font-size:10px;color:#5A647C;">Real Photo</span></span>
+                    <img id="photoPreview" class="hidden">
+                    <input type="file" id="photoInput" accept="image/*" capture="user" style="display:none;">
+                </div>
+            </div>
+
+            <input type="text" id="profileName" placeholder="Your real name">
+            <input type="date" id="profileDob">
+            <select id="profileRole">
+                <option value="">Select Role</option>
+                <option>Top</option>
+                <option>Bottom</option>
+                <option>Versatile</option>
+                <option>Vers Top</option>
+                <option>Vers Bottom</option>
+                <option>Side</option>
+            </select>
+            <div class="grid-3">
+                <select id="profileBody">
+                    <option value="">Body</option>
+                    <option>Slim</option>
+                    <option>Average</option>
+                    <option>Athletic</option>
+                    <option>Muscular</option>
+                    <option>Large</option>
+                </select>
+                <input type="text" id="profileHeight" placeholder="Height">
+                <input type="text" id="profileWeight" placeholder="Weight">
+            </div>
+            <input type="text" id="profileCity" placeholder="City">
+            <textarea id="profileAbout" rows="3" placeholder="About Me (min 20 words)"></textarea>
+
+            <div id="interestsContainer" class="flex" style="flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
+
+            <div class="card flex" style="align-items:flex-start;gap:12px;">
+                <input type="checkbox" id="profileAgreed" style="width:20px;margin-top:4px;">
+                <span class="text-sm text-gray">I confirm this is my real photo and info. Fake profiles are banned permanently.</span>
+            </div>
+
+            <button class="btn mt-4" id="createProfileBtn">Create Profile & Join</button>
+        </div>
+
+        <!-- HOME -->
+        <div id="home" class="hidden">
+            <div class="card flex" style="align-items:center;gap:8px;">
+                <span>🛡️</span>
+                <span style="font-size:11px;color:#8A8FA3;"><b style="color:#fff;">BLUE NIGHT PROMISE:</b> No Bots, No Fakes</span>
+            </div>
+            <div id="discoverList" class="mt-4">
+                <div class="text-center mt-10">
+                    <h2 style="font-size:40px;">🌙</h2>
+                    <h3 style="font-size:22px;margin-top:16px;">You're Early!</h3>
+                    <p class="text-gray">No real members near you yet. Every profile is 100% real.</p>
+                    <button class="btn mt-4" id="shareBtn" style="max-width:200px;margin:0 auto;">📤 Invite Friends</button>
+                </div>
+            </div>
+            <div id="userGrid" class="grid-3 hidden"></div>
+        </div>
+
+        <!-- PROFILE -->
+        <div id="profile" class="hidden">
+            <div class="flex" style="align-items:center;gap:16px;">
+                <div style="width:84px;height:84px;border-radius:50%;overflow:hidden;background:#10141F;border:2px solid #1E293B;">
+                    <img id="profilePhoto" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                <div>
+                    <h3 id="profileNameDisplay" style="font-size:20px;">Your Profile</h3>
+                    <p class="text-gray" id="profileInfo">—</p>
+                </div>
+            </div>
+            <div class="grid-3 mt-4">
+                <div class="card text-center"><h3>0</h3><p class="text-sm text-gray">Likes</p></div>
+                <div class="card text-center"><h3>0</h3><p class="text-sm text-gray">Matches</p></div>
+                <div class="card text-center"><h3>0</h3><p class="text-sm text-gray">Visitors</p></div>
+            </div>
+            <button class="btn mt-4" id="logoutBtn" style="background:#ff4444;">Sign Out</button>
+            <button id="adminLinkBtn" class="text-blue text-sm mt-4" style="background:none;border:none;width:100%;cursor:pointer;">Go to Admin Queue →</button>
+        </div>
+
+        <!-- ADMIN -->
+        <div id="admin" class="hidden">
+            <div class="flex" style="align-items:center;gap:12px;">
+                <div style="width:36px;height:36px;background:#0A84FF;border-radius:12px;display:flex;align-items:center;justify-content:center;">🛡️</div>
+                <div>
+                    <h3>Admin • Verification</h3>
+                    <p class="text-sm text-gray">Approve only 100% real profiles</p>
+                </div>
+                <button id="adminBackBtn" style="margin-left:auto;background:#10141F;border:1px solid #1E293B;border-radius:50%;width:32px;height:32px;color:#fff;cursor:pointer;">✕</button>
+            </div>
+            <div id="adminList" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 🔥 FIREBASE CONFIG
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDX1H9kO5ttbdd3mD5pu-S8asSGNo--0mk",
+            authDomain: "dil-se-dil-tak-b451d.firebaseapp.com",
+            databaseURL: "https://dil-se-dil-tak-b451d-default-rtdb.firebaseio.com",
+            projectId: "dil-se-dil-tak-b451d",
+            storageBucket: "dil-se-dil-tak-b451d.firebasestorage.app",
+            messagingSenderId: "364423864979",
+            appId: "1:364423864979:web:970c17b2746a0ef3db2366",
+            measurementId: "G-VN2WVQ4VD3"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // ============================================================
+        // 🚀 STATE
+        // ============================================================
+        const state = {
+            screen: 'splash',
+            phone: '',
+            otp: [],
+            showOTP: false,
+            user: null,
+            userData: null,
+            pendingUsers: [],
+            discoverUsers: [],
+            isLoading: false,
+            error: '',
+            profile: {
+                name: '',
+                dob: '',
+                role: '',
+                body: '',
+                height: '',
+                weight: '',
+                city: '',
+                about: '',
+                interests: [],
+                agreed: false,
+                photo: null
+            },
+            photoData: null,
+            confirmationResult: null,
+            authUser: null
+        };
+
+        const INTERESTS = ['Gym', 'Travel', 'Music', 'Gaming', 'Art', 'Yoga', 'Reading', 'Coffee', 'Party', 'Movies', 'Beach',
+            'Dance'
+        ];
+
+        // ============================================================
+        // 🔧 DOM HELPERS
+        // ============================================================
+        function showScreen(id) {
+            ['splash', 'auth', 'create', 'home', 'profile', 'admin'].forEach(s => {
+                document.getElementById(s).classList.toggle('hidden', s !== id);
+            });
+            state.screen = id;
+        }
+
+        function $(id) { return document.getElementById(id); }
+
+        function $$(sel) { return document.querySelectorAll(sel); }
+
+        function showError(msg) {
+            const el = $('errorMsg');
+            if (el) { el.textContent = msg;
+                el.classList.remove('hidden'); }
+        }
+
+        function hideError() {
+            const el = $('errorMsg');
+            if (el) el.classList.add('hidden');
+        }
+
+        function renderInterests() {
+            const container = $('interestsContainer');
+            if (!container) return;
+            container.innerHTML = INTERESTS.map(i => {
+                const active = state.profile.interests.includes(i);
+                return `<span class="tag ${active?'active':''}" data-interest="${i}">${i}</span>`;
+            }).join('');
+        }
+
+        function updateProfileUI() {
+            const p = state.profile;
+            if ($('profileName')) $('profileName').value = p.name;
+            if ($('profileDob')) $('profileDob').value = p.dob;
+            if ($('profileRole')) $('profileRole').value = p.role;
+            if ($('profileBody')) $('profileBody').value = p.body;
+            if ($('profileHeight')) $('profileHeight').value = p.height;
+            if ($('profileWeight')) $('profileWeight').value = p.weight;
+            if ($('profileCity')) $('profileCity').value = p.city;
+            if ($('profileAbout')) $('profileAbout').value = p.about;
+            if ($('profileAgreed')) $('profileAgreed').checked = p.agreed;
+            if (p.photo) {
+                const preview = $('photoPreview');
+                const placeholder = $('photoPlaceholder');
+                if (preview) { preview.src = p.photo;
+                    preview.classList.remove('hidden'); }
+                if (placeholder) placeholder.classList.add('hidden');
+            }
+            renderInterests();
+        }
+
+        // ============================================================
+        // 📱 APP LOGIC
+        // ============================================================
+        // Splash -> Auth
         setTimeout(() => {
-          state.screen = 'auth';
-          render();
+            showScreen('auth');
+            state.screen = 'auth';
         }, 2600);
-        return;
-      }
 
-      // ---- AUTH ----
-      if (state.screen === 'auth') {
-        const phoneInput = document.getElementById('phoneInput');
-        const sendOtpBtn =
+        // ---- AUTH ----
+        $('sendOtpBtn')?.addEventListener('click', async () => {
+            const phone = $('phoneInput').value.replace(/\D/g, '');
+            if (phone.length !== 10) { showError('Enter a valid 10-digit number'); return; }
+            hideError();
+            state.phone = phone;
+            state.isLoading = true;
+            $('sendOtpBtn').disabled = true;
+            $('sendOtpBtn').textContent = 'Sending...';
+
+            try {
+                const verifier = new firebase.auth.RecaptchaVerifier('sendOtpBtn', { size: 'invisible' });
+                const result = await auth.signInWithPhoneNumber('+91' + phone, verifier);
+                state.confirmationResult = result;
+                state.showOTP = true;
+                $('phoneSection').classList.add('hidden');
+                $('otpSection').classList.remove('hidden');
+                $('authTitle').innerHTML = 'Enter OTP';
+                $('authSub').textContent = 'Code sent to +91 ' + phone;
+            } catch (e) {
+                showError(e.message);
+            }
+            state.isLoading = false;
+            $('sendOtpBtn').disabled = false;
+            $('sendOtpBtn').textContent = 'Send OTP • Real Verification';
+        });
+
+        $('changePhoneBtn')?.addEventListener('click', () => {
+            state.showOTP = false;
+            state.otp = [];
+            $('phoneSection').classList.remove('hidden');
+            $('otpSection').classList.add('hidden');
+            $('authTitle').innerHTML = 'Welcome to<br>Real Dating';
+            $('authSub').textContent = 'We verify every number. No fake accounts allowed.';
+            document.querySelectorAll('.otp-box').forEach(el => el.value = '');
+            hideError();
+        });
+
+        // OTP auto-focus
+        document.querySelectorAll('.otp-box').forEach((el, idx, arr) => {
+            el.addEventListener('input', () => {
+                if (el.value && idx < arr.length - 1) arr[idx + 1].focus();
+                state.otp[idx] = el.value;
+            });
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !el.value && idx > 0) arr[idx - 1].focus();
+            });
+        });
+
+        $('verifyOtpBtn')?.addEventListener('click', async () => {
+            const code = Array.from(document.querySelectorAll('.otp-box')).map(el => el.value).join('');
+            if (code.length !== 6) { showError('Enter 6-digit OTP'); return; }
+            hideError();
+            $('verifyOtpBtn').disabled = true;
+            $('verifyOtpBtn').textContent = 'Verifying...';
+
+            try {
+                const result = await state.confirmationResult.confirm(code);
+                state.authUser = result.user;
+                checkUserProfile(result.user.uid);
+            } catch (e) {
+                showError('Invalid OTP. Try again.');
+                $('verifyOtpBtn').disabled = false;
+                $('verifyOtpBtn').textContent = 'Verify & Continue';
+            }
+        });
+
+        // ---- CHECK USER PROFILE ----
+        async function checkUserProfile(uid) {
+            try {
+                const doc = await db.collection('users').doc(uid).get();
+                if (doc.exists) {
+                    state.userData = doc.data();
+                    state.user = uid;
+                    showScreen('home');
+                    loadDiscover();
+                    loadPending();
+                } else {
+                    showScreen('create');
+                    updateProfileUI();
+                }
+            } catch (e) {
+                console.error(e);
+                showScreen('create');
+                updateProfileUI();
+            }
+        }
+
+        // ---- CREATE PROFILE ----
+        $('photoUpload')?.addEventListener('click', () => $('photoInput').click());
+
+        $('photoInput')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { alert('Photo must be <5MB'); return; }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                state.profile.photo = ev.target.result;
+                const preview = $('photoPreview');
+                const placeholder = $('photoPlaceholder');
+                if (preview) { preview.src = ev.target.result;
+                    preview.classList.remove('hidden'); }
+                if (placeholder) placeholder.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Profile form inputs
+        ['profileName', 'profileDob', 'profileRole', 'profileBody', 'profileHeight', 'profileWeight', 'profileCity',
+            'profileAbout', 'profileAgreed'
+        ].forEach(id => {
+            const el = $(id);
+            if (!el) return;
+            el.addEventListener('input', () => {
+                const key = id.replace('profile', '').toLowerCase();
+                if (id === 'profileAgreed') state.profile.agreed = el.checked;
+                else if (id === 'profileDob') state.profile.dob = el.value;
+                else state.profile[key] = el.value;
+            });
+            if (id === 'profileAgreed') {
+                el.addEventListener('change', () => state.profile.agreed = el.checked);
+            }
+        });
+
+        // Interests
+        document.addEventListener('click', (e) => {
+            if (e.target.dataset.interest) {
+                const i = e.target.dataset.interest;
+                const idx = state.profile.interests.indexOf(i);
+                if (idx > -1) state.profile.interests.splice(idx, 1);
+                else state.profile.interests.push(i);
+                renderInterests();
+            }
+        });
+
+        $('createProfileBtn')?.addEventListener('click', async () => {
+            const p = state.profile;
+            const age = p.dob ? Math.floor((Date.now() - new Date(p.dob).getTime()) / 31557600000) : 0;
+
+            if (!p.photo) { alert('Upload your real photo'); return; }
+            if (p.name.length < 2) { alert('Enter your real name'); return; }
+            if (age < 18) { alert('You must be 18+'); return; }
+            if (!p.role) { alert('Select your role'); return; }
+            if (!p.city) { alert('Enter your city'); return; }
+            if (p.about.length < 20) { alert('About must be at least 20 characters'); return; }
+            if (!p.agreed) { alert('Please agree to the terms'); return; }
+
+            $('createProfileBtn').disabled = true;
+            $('createProfileBtn').textContent = 'Creating...';
+
+            try {
+                // Upload photo
+                const response = await fetch(p.photo);
+                const blob = await response.blob();
+                const ref = storage.ref('users/' + state.authUser.uid + '/profile.jpg');
+                await ref.put(blob);
+                const photoURL = await ref.getDownloadURL();
+
+                // Save to Firestore
+                await db.collection('users').doc(state.authUser.uid).set({
+                    uid: state.authUser.uid,
+                    phone: state.phone,
+                    name: p.name,
+                    age: age,
+                    dob: p.dob,
+                    role: p.role,
+                    body: p.body || '',
+                    height: p.height || '',
+                    weight: p.weight || '',
+                    city: p.city,
+                    about: p.about,
+                    interests: p.interests,
+                    photoURL: photoURL,
+                    isReal: false,
+                    isBanned: false,
+                    isVerified: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                state.userData = {
+                    name: p.name,
+                    age: age,
+                    role: p.role,
+                    city: p.city,
+                    about: p.about,
+                    photoURL: photoURL,
+                    isReal: false
+                };
+                alert('Profile created! Pending admin verification (24h).');
+                showScreen('home');
+                loadDiscover();
+                loadPending();
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+            $('createProfileBtn').disabled = false;
+            $('createProfileBtn').textContent = 'Create Profile & Join';
+        });
+
+        // ---- LOAD DISCOVER ----
+        async function loadDiscover() {
+            try {
+                const snap = await db.collection('users')
+                    .where('isReal', '==', true)
+                    .where('isBanned', '==', false)
+                    .limit(50)
+                    .get();
+                state.discoverUsers = [];
+                snap.forEach(doc => state.discoverUsers.push(doc.data()));
+                renderDiscover();
+            } catch (e) { console.error(e); }
+        }
+
+        function renderDiscover() {
+            const grid = $('userGrid');
+            const empty = $('discoverList').querySelector('.text-center');
+            if (state.discoverUsers.length === 0) {
+                if (grid) grid.classList.add('hidden');
+                if (empty) empty.classList.remove('hidden');
+            } else {
+                if (grid) { grid.classList.remove('hidden');
+                    grid.innerHTML = state.discoverUsers.map(u =>
+                        `<div class="card" style="padding:8px;">
+                        <img src="${u.photoURL}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;">
+                        <p style="font-size:12px;font-weight:bold;margin-top:4px;">${u.name} • ${u.age}</p>
+                    </div>`
+                    ).join(''); }
+                if (empty) empty.classList.add('hidden');
+            }
+        }
+
+        // ---- LOAD PENDING ----
+        async function loadPending() {
+            try {
+                const snap = await db.collection('users')
+                    .where('isReal', '==', false)
+                    .where('isBanned', '==', false)
+                    .get();
+                state.pendingUsers = [];
+                snap.forEach(doc => state.pendingUsers.push({ ...doc.data(), uid: doc.id }));
+                renderAdmin();
+            } catch (e) { console.error(e); }
+        }
+
+        function renderAdmin() {
+            const list = $('adminList');
+            if (!list) return;
+            if (state.pendingUsers.length === 0) {
+                list.innerHTML =
+                    `<div class="card text-center"><p>✅ Queue Empty</p><p class="text-sm text-gray">No pending verifications.</p></div>`;
+                return;
+            }
+            list.innerHTML = state.pendingUsers.map(u => `
+                <div class="card">
+                    <div class="flex" style="gap:12px;">
+                        <img src="${u.photoURL}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;">
+                        <div>
+                            <p><b>${u.name}</b> • ${u.age} • ${u.role}</p>
+                            <p class="text-sm text-gray">${u.city}</p>
+                            <p class="text-sm text-gray">${u.about}</p>
+                        </div>
+                    </div>
+                    <div class="flex mt-2">
+                        <button class="approve-btn" data-uid="${u.uid}" style="flex:1;padding:10px;background:#00FF88;color:#000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">✅ Approve</button>
+                        <button class="reject-btn" data-uid="${u.uid}" style="flex:1;padding:10px;background:#ff4444;color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">❌ Reject</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Approve/Reject buttons
+            document.querySelectorAll('.approve-btn').forEach(btn => {
+                btn.addEventListener('click', () => approveUser(btn.dataset.uid));
+            });
+            document.querySelectorAll('.reject-btn').forEach(btn => {
+                btn.addEventListener('click', () => rejectUser(btn.dataset.uid));
+            });
+        }
+
+        async function approveUser(uid) {
+            if (!confirm('Approve this real user?')) return;
+            await db.collection('users').doc(uid).update({
+                isReal: true,
+                isVerified: true,
+                verifiedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            loadPending();
+            loadDiscover();
+        }
+
+        async function rejectUser(uid) {
+            if (!confirm('Reject this user as fake?')) return;
+            await db.collection('users').doc(uid).update({
+                isBanned: true,
+                isReal: false,
+                banReason: 'Fake/Filter'
+            });
+            loadPending();
+        }
+
+        // ---- PROFILE ----
+        function loadProfile() {
+            const u = state.userData;
+            if (!u) return;
+            if ($('profileNameDisplay')) $('profileNameDisplay').textContent = u.name || 'Your Profile';
+            if ($('profileInfo')) $('profileInfo').textContent = `${u.age || '?'} • ${u.role || ''} • ${u.city || ''}`;
+            if ($('profilePhoto')) {
+                $('profilePhoto').src = u.photoURL || '';
+                $('profilePhoto').style.display = u.photoURL ? 'block' : 'none';
+            }
+        }
+
+        // ---- NAVIGATION ----
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const screen = btn.dataset.screen;
+                if (screen === 'profile') loadProfile();
+                if (screen === 'home') loadDiscover();
+                showScreen(screen);
+            });
+        });
+
+        $('logoutBtn')?.addEventListener('click', async () => {
+            await auth.signOut();
+            location.reload();
+        });
+
+        $('adminLinkBtn')?.addEventListener('click', () => {
+            showScreen('admin');
+            loadPending();
+        });
+
+        $('adminBackBtn')?.addEventListener('click', () => {
+            showScreen('home');
+            loadDiscover();
+        });
+
+        $('shareBtn')?.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({ title: 'BLUE NIGHT', text: 'Join BLUE NIGHT - 100% real gay dating', url: window
+                        .location.href });
+            } else {
+                alert('Invite link: ' + window.location.href);
+            }
+        });
+
+        // ---- AUTO-LOGIN ----
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                state.authUser = user;
+                checkUserProfile(user.uid);
+            } else {
+                showScreen('auth');
+            }
+        });
+
+        console.log('🔥 BLUE NIGHT — Real Dating App (Firebase)');
+    </script>
+</body>
+</html>
